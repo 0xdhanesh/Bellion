@@ -11,6 +11,8 @@
 !cryptDocker/**
 !OSINTDocker/
 !OSINTDocker/**
+!networkPTDocker/
+!networkPTDocker/**
 **/README.md
 **/compose.yaml
 **/mcp.json

@@ -66,9 +66,33 @@ http:
     print('PASS: ProjectDiscovery versions, bundled templates, local HTTPX/Nuclei/Naabu operations')
 
 
+
+def check_network_tools():
+    from pathlib import Path
+    import struct
+    import tempfile
+    # One synthetic Ethernet/IPv4/TCP packet, 192.0.2.1:12345 -> 198.51.100.2:443.
+    packet = bytes.fromhex('00112233445566778899aabb0800'
+                           '450000280000000040060000c0000201c6336402'
+                           '303901bb00000000000000005002040000000000')
+    with tempfile.TemporaryDirectory() as directory:
+        capture = Path(directory) / 'fixture.pcap'
+        capture.write_bytes(struct.pack('<IHHIIII', 0xa1b2c3d4, 2, 4, 0, 0, 65535, 1)
+                            + struct.pack('<IIII', 1, 0, len(packet), len(packet)) + packet)
+        result = subprocess.check_output(['tshark', '-r', str(capture), '-T', 'fields',
+                                          '-e', 'ip.src', '-e', 'tcp.dstport'], text=True)
+        assert '192.0.2.1' in result and '443' in result, result
+        subprocess.run(['capinfos', str(capture)], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(['tcpdump', '-nn', '-r', str(capture), '-c', '1'], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(['nmap', '--version'], check=True, stdout=subprocess.DEVNULL)
+    print('PASS: offline packet parsing with TShark, capinfos, tcpdump; Nmap starts')
+
+
 async def main():
     assert subprocess.check_output(['whoami'], text=True).strip() == '0xdhanesh'
     modules = {
+        'networkPTDocker': [],
         'webPTDocker': ['bs4', 'requests', 'mitmproxy'],
         'mobilePTDocker': ['androguard', 'frida'],
         'reDocker': ['capstone', 'lief', 'pefile', 'pwnlib', 'elftools', 'unicorn'],
@@ -84,6 +108,8 @@ async def main():
         subprocess.run(['apktool', '--version'], check=True)
     if os.environ['SECURITY_ENV'] == 'mobilePTDocker':
         subprocess.run(['frida', '--version'], check=True)
+    if os.environ['SECURITY_ENV'] == 'networkPTDocker':
+        check_network_tools()
     if os.environ['SECURITY_ENV'] == 'reDocker':
         subprocess.run(['readelf', '-h', '/bin/true'], check=True, stdout=subprocess.DEVNULL)
     if os.environ['SECURITY_ENV'] == 'cryptDocker':

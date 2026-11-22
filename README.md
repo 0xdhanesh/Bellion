@@ -13,6 +13,7 @@ Grok CLI, and Google Antigravity.
 | [reDocker](reDocker/README.md) | ELF and native binary analysis | [Usage](reDocker/USAGE.md) | [MCP setup](reDocker/MCPUSAGE.md) |
 | [cryptDocker](cryptDocker/README.md) | Cryptographic implementation analysis | [Usage](cryptDocker/USAGE.md) | [MCP setup](cryptDocker/MCPUSAGE.md) |
 | [OSINTDocker](OSINTDocker/README.md) | Artifact and website reconnaissance, including REA | [Usage](OSINTDocker/USAGE.md) | [MCP setup](OSINTDocker/MCPUSAGE.md) |
+| [networkPTDocker](networkPTDocker/README.md) | Network enumeration and packet analysis | [Usage](networkPTDocker/USAGE.md) | [MCP setup](networkPTDocker/MCPUSAGE.md) |
 
 Start Docker Desktop or Docker Engine, choose an environment, and follow its
 command guide. Build from the repository root so Docker can access `shared/`.

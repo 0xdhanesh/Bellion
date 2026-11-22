@@ -1,0 +1,25 @@
+{
+  "commands": [
+    "nmap",
+    "tcpdump",
+    "tshark",
+    "capinfos",
+    "socat",
+    "nc",
+    "dig",
+    "host",
+    "nslookup",
+    "ldapsearch",
+    "smbclient",
+    "ip",
+    "ss",
+    "ping",
+    "traceroute",
+    "openssl",
+    "curl",
+    "wget",
+    "whois",
+    "jq",
+    "python3"
+  ]
+}
