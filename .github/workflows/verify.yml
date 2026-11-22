@@ -1,0 +1,20 @@
+name: Verify security environments
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [webPTDocker, mobilePTDocker, reDocker, cryptDocker, OSINTDocker]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify environment
+        run: ./scripts/verify.sh '${{ matrix.environment }}'

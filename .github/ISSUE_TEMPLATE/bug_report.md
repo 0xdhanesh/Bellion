@@ -32,7 +32,7 @@ assignees: ''
 - **Host OS**: <!-- e.g., macOS 14.2, Ubuntu 22.04 -->
 - **Architecture**: <!-- e.g., Apple Silicon M3, x86_64 -->
 - **Docker Version**: <!-- Run: docker --version -->
-- **Image Tag**: <!-- e.g., binary-analysis:latest -->
+- **Image Tag**: <!-- e.g., webptdocker:latest -->
 
 ## Logs/Output
 <!-- Paste relevant logs or error messages -->

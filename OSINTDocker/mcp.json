@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "OSINTDocker": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--ulimit",
+        "fsize=16777216:16777216",
+        "--mount",
+        "type=bind,src=/ABSOLUTE/PATH/TO/workspace,dst=/workspace",
+        "osintdocker:latest",
+        "python3",
+        "/opt/security/mcp_server.py"
+      ]
+    },
+    "rea": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--ulimit",
+        "fsize=16777216:16777216",
+        "--mount",
+        "type=bind,src=/ABSOLUTE/PATH/TO/workspace,dst=/workspace",
+        "osintdocker:latest",
+        "rea",
+        "mcp"
+      ]
+    }
+  }
+}

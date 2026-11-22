@@ -28,8 +28,7 @@ If you encounter a bug or have a feature request:
 
 3. **Test your changes**:
    ```bash
-   docker build -t ubuntu-binary-analysis:test .
-   docker run --rm -it ubuntu-binary-analysis:test /bin/bash
+   ./scripts/verify.sh webPTDocker
    ```
 
 4. **Commit your changes** with clear, descriptive messages:
@@ -70,12 +69,12 @@ Before submitting a PR, ensure:
 
 1. **Docker image builds successfully**:
    ```bash
-   docker build -t ubuntu-binary-analysis:test .
+   docker build -f webPTDocker/Dockerfile -t webptdocker:latest .
    ```
 
 2. **All tools are accessible**:
    ```bash
-   docker run --rm ubuntu-binary-analysis:test /bin/bash -c "file --version && objdump --version"
+   docker run --rm -i --network=none webptdocker:latest python3 - < tests/smoke_mcp.py
    ```
 
 3. **Image size is reasonable** (check with `docker images`)
@@ -84,7 +83,7 @@ Before submitting a PR, ensure:
 
 ## Development Workflow
 
-1. **Discuss major changes** by opening an issue first
+1. **Describe major changes** in an issue or the task request
 2. **Keep PRs focused** - one feature/fix per PR
 3. **Update documentation** alongside code changes
 4. **Be responsive** to feedback and review comments

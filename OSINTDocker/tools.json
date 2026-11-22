@@ -1,0 +1,23 @@
+{
+  "commands": [
+    "rea",
+    "androguard",
+    "apktool",
+    "binwalk",
+    "curl",
+    "wget",
+    "dig",
+    "host",
+    "nslookup",
+    "whois",
+    "exiftool",
+    "file",
+    "strings",
+    "readelf",
+    "nmap",
+    "openssl",
+    "rg",
+    "jq",
+    "python3"
+  ]
+}

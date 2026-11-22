@@ -1,130 +1,82 @@
-# Docker Environments Collection
+# Security Docker Environments
 
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+Five CLI environments for security research, maintained by **0xdhanesh**
+<dhanesh.professional@gmail.com>. Each includes a non-root shell and a local
+stdio MCP bridge for running its tools from a trusted agent client.
 
-A collection of specialized Docker environments for security research, reverse engineering, and development workflows. Optimized for macOS (Apple Silicon).
+| Environment | Scope | Main tools |
+| --- | --- | --- |
+| [webPTDocker](webPTDocker/) | Web application pentesting | ffuf, gobuster, sqlmap, nmap, mitmproxy |
+| [mobilePTDocker](mobilePTDocker/) | Android and iOS applications | ADB, apktool, Androguard, Frida, libimobiledevice |
+| [reDocker](reDocker/) | ELF and native binaries | GDB, binutils, strace, YARA, pwntools, Capstone, LIEF |
+| [cryptDocker](cryptDocker/) | Cryptographic implementations | OpenSSL, SymPy, GMP, PyCryptodome, Z3, John, hashcat |
+| [OSINTDocker](OSINTDocker/) | Artifacts and passive/active recon | REA, WHOIS, DNS tools, ExifTool, binwalk, nmap, apktool |
 
-## Available Environments
+## Quick start
 
-### 🔍 [Binary Analysis](binary-analysis/)
-
-Ubuntu 22.04 environment with comprehensive binary analysis and reverse engineering tools.
-
-**Tools**: file, binutils (objdump, readelf, strings, nm), strace, ltrace, gdb, hexdump, od
-
-**Quick Start**:
-```bash
-docker build -t binary-analysis:latest ./binary-analysis/
-docker run --rm -it binary-analysis:latest
-```
-
-**Use Cases**:
-- Static binary analysis
-- Dynamic analysis with strace/ltrace
-- Debugging with GDB
-- Reverse engineering x86_64 binaries
-
-[📖 Full Documentation](binary-analysis/README.md)
-
----
-
-## Planned Environments
-
-### 🔧 Firmware Analysis *(Coming Soon)*
-Tools for embedded firmware extraction, analysis, and reverse engineering.
-
-**Planned Tools**: binwalk, firmware-mod-kit, QEMU, radare2, ghidra
-
-### 🌐 Network Reconnaissance *(Coming Soon)*
-Comprehensive network scanning and reconnaissance toolkit.
-
-**Planned Tools**: nmap, masscan, gobuster, ffuf, nuclei, httpx
-
-### 🛡️ Web Application Testing *(Coming Soon)*
-Environment for web application security testing and analysis.
-
-**Planned Tools**: Burp Suite CLI, sqlmap, nikto, wpscan, ffuf
-
----
-
-## Project Structure
-
-```
-.
-├── binary-analysis/          # Binary analysis environment
-│   ├── Dockerfile
-│   ├── README.md
-│   ├── .dockerignore
-│   └── docs/
-│       ├── USAGE.md
-│       └── TOOLS.md
-├── firmware-analysis/        # (Coming soon)
-├── network-recon/           # (Coming soon)
-├── web-testing/             # (Coming soon)
-├── README.md                # This file
-├── LICENSE
-└── CONTRIBUTING.md
-```
-
-## General Usage
-
-Each environment follows a consistent structure:
+Install Docker Engine or Docker Desktop, start its daemon, and clone this repo.
+Build with the **repository root as context** because the images use `shared/`:
 
 ```bash
-# Build an environment
-docker build -t <env-name>:latest ./<env-directory>/
-
-# Run interactively
-docker run --rm -it <env-name>:latest
-
-# Mount files for analysis
-docker run --rm -it -v $(pwd):/analysis <env-name>:latest
+mkdir -p webPTDocker/workspace
+docker build -f webPTDocker/Dockerfile -t webptdocker:latest .
+docker run --rm -it --cap-drop=ALL --security-opt=no-new-privileges \
+  --ulimit fsize=16777216:16777216 \
+  --mount "type=bind,src=$PWD/webPTDocker/workspace,dst=/workspace" \
+  webptdocker:latest
 ```
 
-## Requirements
+Or use `docker compose -f webPTDocker/compose.yaml run --build --rm tools`.
+Each environment README covers its toolset, examples, device connections,
+architecture requirements, and limitations. All image tags are lowercase.
 
-- [Docker](https://www.docker.com/get-started) installed
-- For Apple Silicon Macs: Rosetta 2 (automatically used for x86_64 environments)
+## MCP access
 
-## macOS Optimization
+Each directory includes `mcp.json`. Merge the desired server entry into your
+stdio MCP client's configuration and replace the example absolute workspace
+path. Build the image first. The client starts `docker run --rm -i` automatically;
+there is no HTTP endpoint or published MCP port.
 
-All environments are optimized for macOS, particularly Apple Silicon:
+The bridge exposes `list_tools` and `run_tool(command, args, cwd, timeout)` using
+the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
+OSINTDocker also includes an independent native [REA](https://github.com/morluto/rea)
+MCP server, launched with `rea mcp`, with its own tools. REA's optional analysis
+engines are separate prerequisites; see [OSINTDocker](OSINTDocker/README.md).
 
-- **Platform Emulation**: x86_64 environments use Rosetta 2 for seamless emulation
-- **Performance**: Optimized for M-series chip architecture
-- **Compatibility**: Full support for analyzing x86_64 binaries on ARM hardware
+MCP access grants code execution inside the container. Mount only needed files,
+use trusted clients, and add `--network=none` for offline artifact work. Reports
+persist in `/workspace`; other container changes disappear at exit. Tools
+cannot exceed the runtime's host, architecture, device, or driver capabilities.
 
-## Contributing
+## Platforms and limitations
 
-Contributions are welcome! Whether you want to:
-- Improve existing environments
-- Add new tools to current environments
-- Propose new environment types
-- Fix bugs or improve documentation
+Images use Ubuntu 24.04 and build for the host architecture. Foreign binaries
+may be inspected statically, but native execution/debugging requires compatible
+architecture and kernel features. On Apple Silicon, an explicit
+`--platform linux/amd64` build/run uses Docker's configured emulation; ptrace,
+GPU access, and device passthrough are not guaranteed. Linux containers cannot
+run Apple's iOS Simulator or Xcode. No privileged mode, sudo, or host Docker
+socket is needed for the default configurations.
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+All containers use `0xdhanesh` (UID 10001). Native Linux bind mounts may need
+ownership adjustment or an explicit user override; see each README. Dependency
+ranges and Ubuntu repositories resolve at build time; only REA and its Node
+runtime are pinned. These images are starting environments rather than
+reproducible forensic appliances.
 
-## License
+## Validation
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```bash
+./scripts/verify.sh                 # Build and verify all environments
+./scripts/verify.sh webPTDocker     # Verify one environment
+```
 
-## Author
+Checks validate Compose configuration, image builds, the runtime identity, all
+manifest executables, real MCP initialization and tool calls, exit codes,
+timeouts, output truncation, argument handling, and invalid requests. OSINT also
+checks the independent REA MCP server. They run offline after the build and do
+not probe external targets. CI runs the same checks on Linux amd64; other
+architectures and physical-device sessions need separate verification.
 
-**0xdhanesh**
-- GitHub: [@0xdhanesh](https://github.com/0xdhanesh)
-- Email: dhanesh.professional@gmail.com
-
-## Acknowledgments
-
-- Built on industry-standard tools and frameworks
-- Designed for security researchers and developers
-- Community-driven development
-
----
-
-## Quick Links
-
-- [Binary Analysis Environment](binary-analysis/) - Available now ✅
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [License](LICENSE)
+See [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under [MIT](LICENSE); bundled
+tools retain their own licenses.
