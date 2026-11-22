@@ -6,7 +6,7 @@ available images. Add them to `~/.zshrc` or `~/.bashrc`, then reload that file w
 root before using the helpers from any directory:
 
 ```bash
-for environment in webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker networkPTDocker adPTDocker; do
+for environment in webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker networkPTDocker adPTDocker cloudPTDocker; do
   image=$(printf '%s' "$environment" | tr '[:upper:]' '[:lower:]')
   docker build -f "$environment/Dockerfile" -t "$image:latest" .
 done
@@ -14,8 +14,8 @@ done
 
 The `here` helpers mount your current directory read/write at `/workspace` and
 use it as the working directory. They quote paths containing spaces and retain
-the image's `0xdhanesh` account. See the permissions guidance above for native
-Linux bind mounts. Files saved under `/workspace` remain on your host.
+the image's `0xdhanesh` account. See each environment's usage guide for native
+Linux bind-mount permissions. Files saved under `/workspace` remain on your host.
 
 ```bash
 # Shared defaults for this project's containers.
@@ -73,6 +73,10 @@ networkpthere() {
 
 adpthere() {
     dockershellhere adptdocker:latest "$@"
+}
+
+cloudpthere() {
+    dockershellhere cloudptdocker:latest "$@"
 }
 
 # Direct tool shortcuts, using tools actually installed in these images.

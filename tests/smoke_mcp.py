@@ -104,11 +104,42 @@ def check_ad_tools():
     print('PASS: Impacket SMB2 serialization and AD client startup; no domain contacted')
 
 
+
+def check_cloud_tools():
+    from pathlib import Path
+    import tempfile
+    import boto3
+    from botocore.stub import Stubber
+
+    assert 'aws-cli/1.46.3' in subprocess.check_output(['aws', '--version'], text=True)
+    versions = json.loads(subprocess.check_output(['az', 'version', '--output', 'json'], text=True))
+    assert versions['azure-cli'] == '2.93.0', versions
+    assert '594.0.0' in subprocess.check_output(['gcloud', '--version'], text=True)
+    subprocess.run(['trivy', '--version'], check=True, stdout=subprocess.DEVNULL)
+    # Explicit fake credentials and stubbed response: no provider or metadata call.
+    client = boto3.client('sts', region_name='us-east-1',
+                          aws_access_key_id='fixture', aws_secret_access_key='fixture')
+    with Stubber(client) as stub:
+        stub.add_response('get_caller_identity', {'UserId': 'fixture', 'Account': '123456789012',
+                          'Arn': 'arn:aws:iam::123456789012:user/fixture'})
+        assert client.get_caller_identity()['Account'] == '123456789012'
+    with tempfile.TemporaryDirectory() as directory:
+        Path(directory, 'Dockerfile').write_text('FROM ubuntu:24.04\nRUN echo fixture\n')
+        result = subprocess.run(['trivy', 'config', '--skip-check-update',
+                                 '--misconfig-scanners', 'dockerfile', '--format', 'json', directory],
+                                text=True, capture_output=True, timeout=90)
+        assert result.returncode == 0, (result.stdout, result.stderr)
+        report = json.loads(result.stdout)
+        assert any(row.get('Misconfigurations') for row in report.get('Results', [])), report
+    print('PASS: cloud CLI startup, stubbed AWS SDK, and offline Trivy misconfiguration detection')
+
+
 async def main():
     assert subprocess.check_output(['whoami'], text=True).strip() == '0xdhanesh'
     modules = {
         'networkPTDocker': [],
         'adPTDocker': ['impacket', 'ldap3', 'dns'],
+        'cloudPTDocker': ['boto3', 'requests'],
         'webPTDocker': ['bs4', 'requests', 'mitmproxy'],
         'mobilePTDocker': ['androguard', 'frida'],
         'reDocker': ['capstone', 'lief', 'pefile', 'pwnlib', 'elftools', 'unicorn'],
@@ -124,6 +155,8 @@ async def main():
         subprocess.run(['apktool', '--version'], check=True)
     if os.environ['SECURITY_ENV'] == 'mobilePTDocker':
         subprocess.run(['frida', '--version'], check=True)
+    if os.environ['SECURITY_ENV'] == 'cloudPTDocker':
+        check_cloud_tools()
     if os.environ['SECURITY_ENV'] == 'adPTDocker':
         check_ad_tools()
     if os.environ['SECURITY_ENV'] == 'networkPTDocker':

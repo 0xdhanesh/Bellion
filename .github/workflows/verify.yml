@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [networkPTDocker, webPTDocker, mobilePTDocker, reDocker, cryptDocker, OSINTDocker]
+        environment: [webPTDocker, mobilePTDocker, reDocker, cryptDocker, OSINTDocker, networkPTDocker, adPTDocker, cloudPTDocker]
     steps:
       - uses: actions/checkout@v4
       - name: Build and verify environment

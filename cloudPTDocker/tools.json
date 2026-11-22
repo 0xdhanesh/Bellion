@@ -1,0 +1,12 @@
+{
+  "commands": [
+    "aws",
+    "az",
+    "gcloud",
+    "trivy",
+    "openssl",
+    "curl",
+    "jq",
+    "python3"
+  ]
+}

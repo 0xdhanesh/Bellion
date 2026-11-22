@@ -1,0 +1,12 @@
+[
+  {
+    "repository": "aquasecurity/trivy",
+    "version": "v0.76.2",
+    "binary": "trivy",
+    "checksums": "trivy_0.76.2_checksums.txt",
+    "assets": {
+      "amd64": "trivy_0.76.2_Linux-64bit.tar.gz",
+      "arm64": "trivy_0.76.2_Linux-ARM64.tar.gz"
+    }
+  }
+]

@@ -15,6 +15,8 @@
 !networkPTDocker/**
 !adPTDocker/
 !adPTDocker/**
+!cloudPTDocker/
+!cloudPTDocker/**
 **/README.md
 **/compose.yaml
 **/mcp.json

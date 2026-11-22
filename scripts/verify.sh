@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-environments=(networkPTDocker webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker)
+environments=(webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker networkPTDocker adPTDocker cloudPTDocker)
 if (( $# )); then environments=("$@"); fi
 for environment in "${environments[@]}"; do
   case "$environment" in
-    networkPTDocker|webPTDocker|mobilePTDocker|reDocker|cryptDocker|OSINTDocker) ;;
+    webPTDocker|mobilePTDocker|reDocker|cryptDocker|OSINTDocker|networkPTDocker|adPTDocker|cloudPTDocker) ;;
     *) echo "Unknown environment: $environment" >&2; exit 2 ;;
   esac
   image="$(echo "$environment" | tr '[:upper:]' '[:lower:]'):latest"

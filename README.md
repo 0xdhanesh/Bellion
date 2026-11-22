@@ -1,9 +1,8 @@
 # Security Docker Environments
 
 Docker environments for web and mobile pentesting, reverse engineering,
-cryptographic analysis, OSINT, network analysis, and Active Directory assessment,
-with MCP integration for Claude, Codex,
-Grok CLI, and Google Antigravity.
+cryptographic analysis, OSINT, networks, Active Directory, and cloud configurations.
+Includes MCP integration for Claude, Codex, Grok CLI, and Google Antigravity.
 
 ## Environments
 
@@ -16,6 +15,7 @@ Grok CLI, and Google Antigravity.
 | [OSINTDocker](OSINTDocker/README.md) | Artifact and website reconnaissance, including REA | [Usage](OSINTDocker/USAGE.md) | [MCP setup](OSINTDocker/MCPUSAGE.md) |
 | [networkPTDocker](networkPTDocker/README.md) | Network enumeration and packet analysis | [Usage](networkPTDocker/USAGE.md) | [MCP setup](networkPTDocker/MCPUSAGE.md) |
 | [adPTDocker](adPTDocker/README.md) | Windows and Active Directory assessment | [Usage](adPTDocker/USAGE.md) | [MCP setup](adPTDocker/MCPUSAGE.md) |
+| [cloudPTDocker](cloudPTDocker/README.md) | Cloud and container configuration assessment | [Usage](cloudPTDocker/USAGE.md) | [MCP setup](cloudPTDocker/MCPUSAGE.md) |
 
 Start Docker Desktop or Docker Engine, choose an environment, and follow its
 command guide. Build from the repository root so Docker can access `shared/`.
@@ -52,6 +52,7 @@ dockershellhere cryptdocker:latest
 dockershellhere osintdocker:latest
 dockershellhere networkptdocker:latest
 dockershellhere adptdocker:latest
+dockershellhere cloudptdocker:latest
 ```
 
 See the [full helper guide](docs/SHELL_HELPERS.md) for tool and MCP shortcuts,

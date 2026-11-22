@@ -1,0 +1,10 @@
+{
+  "amd64": {
+    "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-594.0.0-linux-x86_64.tar.gz",
+    "sha256": "1f7233537c26bba94a3ea3f9085a60396745eaf44b21b8454fc6fdd15bb6fcde"
+  },
+  "arm64": {
+    "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-594.0.0-linux-arm.tar.gz",
+    "sha256": "e58fb86fff3dfd7101e1ff138f06bd4e338c7bf12a7508a7871985e7ea886275"
+  }
+}
