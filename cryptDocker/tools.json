@@ -1,0 +1,9 @@
+{
+  "commands": [
+    "openssl",
+    "gpg",
+    "hashcat",
+    "john",
+    "python3"
+  ]
+}
