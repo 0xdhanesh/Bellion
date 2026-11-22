@@ -81,6 +81,143 @@ architectures and physical-device sessions need separate verification.
 See [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under [MIT](LICENSE); bundled
 tools retain their own licenses.
 
+## Expected outputs from each container
+
+Starting a container opens a shell; it does not automatically scan a target or
+create a report. Outputs depend on the command, supplied artifact/target, and
+available device or analysis provider. The examples below run **inside the
+corresponding container shell**, with inputs mounted under `/workspace`. Save
+reports there to keep them after the container exits.
+
+### OSINTDocker
+
+| Tool/workflow | Expected output |
+| --- | --- |
+| `dig`, `host`, `whois` | DNS records, resolved addresses, and registration data when publicly available; redacted records, empty answers, or lookup errors are also possible. |
+| `exiftool`, `file`, `binwalk` | File type, embedded metadata, and candidate embedded-file signatures/offsets. Metadata may be absent; signature matches need verification. |
+| `nmap -sT -sV` | Reachable ports, port states, and service/version guesses for the scanned target. |
+| `apktool`, Androguard | Decoded APK resources/manifest and Android analysis results, depending on the selected command. |
+| REA JavaScript analysis | Structured JSON containing an application graph, analysis evidence, coverage, limitations, and unresolved information. Optional provider-dependent workflows can report missing prerequisites. |
+
+Example: save metadata as JSON and inspect a locally extracted JavaScript app:
+
+```bash
+exiftool -json /workspace/document.pdf > /workspace/metadata.json
+rea analyze-javascript-application /workspace/extracted-app --json > /workspace/rea-analysis.json
+```
+
+These are recon and analysis results; they do not automatically establish a
+vulnerability or produce a complete assessment of a website or APK.
+
+### cryptDocker
+
+| Tool/workflow | Expected output |
+| --- | --- |
+| OpenSSL digest commands | A hexadecimal digest and algorithm/file label. |
+| OpenSSL certificate inspection | Certificate subject, issuer, validity dates, public-key details, extensions, and signature algorithm. Inspection alone does not validate trust. |
+| SymPy, GMP, PyCryptodome, cryptography, Z3 | Values printed by your Python script, such as factors, test-vector comparisons, decrypted bytes with valid inputs, or solver results/models. |
+| John / hashcat | Supported hash-loading results, progress/status, and recovered candidates if a supplied candidate matches. Unsupported formats/backends or no matches are valid outcomes. |
+
+Example: save a file digest and print a small factorization:
+
+```bash
+openssl dgst -sha256 /workspace/sample > /workspace/sample.sha256.txt
+python3 -c 'import sympy; print(sympy.factorint(65535))'
+# Expected factorization: {3: 1, 5: 1, 17: 1, 257: 1}
+```
+
+No automatic cryptographic audit or key recovery occurs when the shell starts.
+GPU-dependent jobs may fail if no compatible backend is available.
+
+### mobilePTDocker
+
+| Tool/workflow | Expected output |
+| --- | --- |
+| `apktool d` | A decoded directory with `AndroidManifest.xml`, resources, and usually Smali code for included DEX files. This is not the original Java/Kotlin source. |
+| Androguard | APK/DEX metadata and analysis information for the requested operation, such as package, permission, or code relationships. |
+| `unzip`, `plistutil` | Extracted IPA contents and a readable plist representation; executable code may remain encrypted. |
+| `adb devices -l`, `idevice_id -l` | Device identifiers and connection state, or an empty list when no device is reachable. |
+| ADB logs, `idevicesyslog`, Frida | Device/application logs, process listings, or messages emitted by your instrumentation script when device access and instrumentation prerequisites are met. |
+
+Example: decode an APK and extract an IPA into persistent directories:
+
+```bash
+apktool d /workspace/app.apk -o /workspace/decoded-apk
+unzip /workspace/app.ipa -d /workspace/extracted-ipa
+```
+
+Offline extraction works without a connected phone. Runtime findings require a
+reachable, authorized device; this container does not start an iOS Simulator or
+an Android emulator.
+
+### reDocker
+
+| Tool/workflow | Expected output |
+| --- | --- |
+| `file`, `readelf`, `nm`, `strings` | Binary format/architecture, ELF headers and sections, available symbols, and printable strings. Stripped binaries contain fewer symbols. |
+| `objdump -d`, Capstone | Disassembled instructions for supported code/architectures. These are assembly listings, not recovered source code. |
+| GDB, `strace`, `ltrace` | Debugger state, registers/backtraces, system calls, or library calls when the target executes and tracing is supported. |
+| `checksec`, YARA | Reported binary hardening properties or matching rule names; no match is also a valid result. |
+| LIEF, pyelftools, pwntools | Parsed structures, transformed artifacts, or analysis results explicitly produced by your script. |
+
+Example: save ELF metadata and disassembly without executing the sample:
+
+```bash
+readelf -h /workspace/sample > /workspace/elf-header.txt
+objdump -d /workspace/sample > /workspace/disassembly.txt
+```
+
+Debug output depends on architecture, symbols, and ptrace support. The image
+does not automatically generate decompiled C or a finished reverse-engineering
+report.
+
+### webPTDocker
+
+| Tool/workflow | Expected output |
+| --- | --- |
+| `curl` | Response headers/body, HTTP status details when requested, or connection/TLS errors. |
+| ffuf / gobuster | Matching URLs/paths or other requested discovery results, with status/size details depending on mode and filters. Empty results are possible. |
+| sqlmap | Test progress, potential/confirmed SQL injection details when detected, and session/output files. A run can conclude that tested parameters are not injectable. |
+| mitmproxy / `mitmdump` | HTTP(S) flows that actually pass through the configured proxy; saved flow files when explicitly requested. HTTPS inspection requires client CA trust. |
+| `nmap`, OpenSSL | Port/service observations and TLS/certificate information for the requested target. |
+
+Example: save discovery results as JSON and capture proxied flows:
+
+```bash
+ffuf -u https://example.com/FUZZ -w /workspace/wordlist.txt -of json -o /workspace/ffuf-results.json
+mitmdump --listen-host 0.0.0.0 --listen-port 8080 -w /workspace/flows.mitm
+```
+
+Supply your own authorized target and wordlist. The proxy example waits for
+traffic and runs until stopped; publish its port and configure the test client
+as described in [webPTDocker](webPTDocker/README.md). For persistent sqlmap
+results, pass `--output-dir=/workspace/sqlmap-results`. Discovery hits and scanner
+messages need review before being treated as verified vulnerabilities.
+
+### Outputs over MCP
+
+All five command bridges return `list_tools` as executable names mapped to
+installation booleans. A successful `run_tool` call returns the following fields
+inside the MCP tool result (illustrative response for `python3 -c "print('hello')"`):
+
+```json
+{
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "hello\n",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_truncated": false
+}
+```
+
+A successful MCP request can still report a nonzero command exit code. Check
+`exit_code`, `timed_out`, `stderr`, and truncation flags before interpreting the
+output. Each captured stream is limited to 64 KiB; write larger reports to
+`/workspace`. Invalid bridge requests return MCP tool errors. OSINTDocker's
+separate native REA server returns its own structured analysis/evidence results
+rather than this command-runner shape.
+
 ## Shell helpers for this project
 
 These Bash/Zsh functions adapt the pasted Docker shortcuts to this repository's
