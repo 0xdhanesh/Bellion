@@ -91,3 +91,8 @@ in REA requests. The two servers see the same mounted workspace.
 
 See the [REA installation and provider guide](https://github.com/morluto/rea/blob/main/docs/getting-started/installation.md)
 for optional engines. REA does not install an analysis engine automatically.
+
+## Usage guides
+
+- [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
+- [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.

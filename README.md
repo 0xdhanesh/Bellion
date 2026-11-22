@@ -12,6 +12,16 @@ stdio MCP bridge for running its tools from a trusted agent client.
 | [cryptDocker](cryptDocker/) | Cryptographic implementations | OpenSSL, SymPy, GMP, PyCryptodome, Z3, John, hashcat |
 | [OSINTDocker](OSINTDocker/) | Artifacts and passive/active recon | REA, WHOIS, DNS tools, ExifTool, binwalk, nmap, apktool |
 
+## Detailed usage guides
+
+| Container | Commands and shell setup | MCP clients and operation prompts |
+| --- | --- | --- |
+| webPTDocker | [USAGE.md](webPTDocker/USAGE.md) | [MCPUSAGE.md](webPTDocker/MCPUSAGE.md) |
+| mobilePTDocker | [USAGE.md](mobilePTDocker/USAGE.md) | [MCPUSAGE.md](mobilePTDocker/MCPUSAGE.md) |
+| reDocker | [USAGE.md](reDocker/USAGE.md) | [MCPUSAGE.md](reDocker/MCPUSAGE.md) |
+| cryptDocker | [USAGE.md](cryptDocker/USAGE.md) | [MCPUSAGE.md](cryptDocker/MCPUSAGE.md) |
+| OSINTDocker | [USAGE.md](OSINTDocker/USAGE.md) | [MCPUSAGE.md](OSINTDocker/MCPUSAGE.md) |
+
 ## Quick start
 
 Install Docker Engine or Docker Desktop, start its daemon, and clone this repo.
