@@ -1,0 +1,17 @@
+services:
+  tools:
+    image: webptdocker:latest
+    build:
+      context: ..
+      dockerfile: webPTDocker/Dockerfile
+    stdin_open: true
+    tty: true
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ulimits:
+      fsize:
+        soft: 16777216
+        hard: 16777216
+    volumes:
+      - ./workspace:/workspace

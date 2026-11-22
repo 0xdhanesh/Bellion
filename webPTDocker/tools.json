@@ -1,0 +1,15 @@
+{
+  "commands": [
+    "curl",
+    "wget",
+    "dig",
+    "ffuf",
+    "gobuster",
+    "nmap",
+    "openssl",
+    "sqlmap",
+    "mitmdump",
+    "mitmproxy",
+    "python3"
+  ]
+}

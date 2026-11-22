@@ -1,0 +1,17 @@
+**
+!shared/
+!shared/**
+!webPTDocker/
+!webPTDocker/**
+!mobilePTDocker/
+!mobilePTDocker/**
+!reDocker/
+!reDocker/**
+!cryptDocker/
+!cryptDocker/**
+!OSINTDocker/
+!OSINTDocker/**
+**/README.md
+**/compose.yaml
+**/mcp.json
+**/__pycache__
