@@ -4,7 +4,7 @@ Web application pentesting. Maintainer: **0xdhanesh** <dhanesh.professional@gmai
 
 ## Included tools
 
-Executables: `curl`, `wget`, `dig`, `ffuf`, `gobuster`, `nmap`, `openssl`, `sqlmap`, `mitmdump`, `mitmproxy`, `python3`.
+Executables: `curl`, `wget`, `dig`, `ffuf`, `gobuster`, `nmap`, `openssl`, `sqlmap`, `mitmdump`, `mitmproxy`, `python3`, `subfinder`, `dnsx`, `httpx-pd`, `katana`, `nuclei`, `naabu`, `interactsh-client`.
 
 Python libraries/packages: `beautifulsoup4>=4.12,<5`, `mitmproxy>=11,<13`, `requests>=2.32,<3`.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
@@ -80,3 +80,20 @@ images. Keep build logs or freeze package versions when reproducibility is neede
 
 - [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
 - [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.
+
+## ProjectDiscovery tools
+
+Pinned upstream binaries are recorded in [releases.json](releases.json) and
+verified against upstream SHA-256 checksum manifests during the build. Both
+Linux amd64 and arm64 are supported. ProjectDiscovery HTTPX is named `httpx-pd`
+to avoid shadowing the Python `httpx` CLI installed with MCP dependencies.
+
+The image bundles Nuclei templates v10.5.2 under `/opt/nuclei-templates`.
+Use `-t /opt/nuclei-templates` explicitly. For portable runtime state, mount
+`./workspace` and put provider configuration, templates, wordlists and reports
+there. No provider API keys or wordlists are shipped. Subfinder's coverage depends
+on configured sources. Katana's headless mode needs a separate browser setup.
+Naabu defaults here should use TCP connect mode (`-scan-type c`) with dropped
+capabilities. Interactsh contacts an external OAST service when started; run it
+only when that interaction is intended. Nuclei template matches need validation.
+See [ProjectDiscovery documentation](https://docs.projectdiscovery.io/opensource).

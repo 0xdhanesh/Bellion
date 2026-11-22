@@ -9,6 +9,63 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 
+def check_projectdiscovery():
+    import http.server
+    from pathlib import Path
+    import tempfile
+    import threading
+
+    def execute(*args):
+        result = subprocess.run(args, text=True, capture_output=True, timeout=60)
+        assert result.returncode == 0, (args, result.stdout, result.stderr)
+        return result.stdout + result.stderr
+
+    for tool in ['subfinder', 'dnsx', 'httpx-pd', 'katana', 'nuclei', 'naabu', 'interactsh-client']:
+        execute(tool, '-version')
+    assert Path('/opt/nuclei-templates/http').is_dir()
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'security docker fixture')
+
+        def log_message(self, *args):
+            pass
+
+    server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    url = f'http://127.0.0.1:{server.server_port}'
+    try:
+        output = execute('httpx-pd', '-u', url, '-sc', '-silent', '-duc', '-timeout', '5')
+        assert '200' in output, output
+        output = execute('naabu', '-host', '127.0.0.1', '-p', str(server.server_port),
+                         '-scan-type', 'c', '-silent', '-duc', '-verify')
+        assert str(server.server_port) in output, output
+        with tempfile.TemporaryDirectory() as directory:
+            template = Path(directory) / 'fixture.yaml'
+            template.write_text("""id: security-docker-fixture
+info:
+  name: Local fixture
+  author: 0xdhanesh
+  severity: info
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers:
+      - type: word
+        words:
+          - "security docker fixture"
+""")
+            output = execute('nuclei', '-u', url, '-t', str(template), '-ni', '-duc', '-silent')
+            assert 'security-docker-fixture' in output, output
+    finally:
+        server.shutdown()
+        server.server_close()
+    print('PASS: ProjectDiscovery versions, bundled templates, local HTTPX/Nuclei/Naabu operations')
+
+
 async def main():
     assert subprocess.check_output(['whoami'], text=True).strip() == '0xdhanesh'
     modules = {
@@ -22,6 +79,7 @@ async def main():
         importlib.import_module(module)
     if os.environ['SECURITY_ENV'] == 'webPTDocker':
         subprocess.run(['mitmdump', '--version'], check=True)
+        check_projectdiscovery()
     if os.environ['SECURITY_ENV'] in {'mobilePTDocker', 'OSINTDocker'}:
         subprocess.run(['apktool', '--version'], check=True)
     if os.environ['SECURITY_ENV'] == 'mobilePTDocker':

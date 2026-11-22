@@ -1,0 +1,73 @@
+[
+  {
+    "repository": "projectdiscovery/subfinder",
+    "version": "v2.17.0",
+    "binary": "subfinder",
+    "checksums": "subfinder_2.17.0_checksums.txt",
+    "assets": {
+      "amd64": "subfinder_2.17.0_linux_amd64.zip",
+      "arm64": "subfinder_2.17.0_linux_arm64.zip"
+    }
+  },
+  {
+    "repository": "projectdiscovery/dnsx",
+    "version": "v1.3.1",
+    "binary": "dnsx",
+    "checksums": "dnsx_1.3.1_checksums.txt",
+    "assets": {
+      "amd64": "dnsx_1.3.1_linux_amd64.zip",
+      "arm64": "dnsx_1.3.1_linux_arm64.zip"
+    }
+  },
+  {
+    "repository": "projectdiscovery/httpx",
+    "version": "v1.12.0",
+    "binary": "httpx",
+    "checksums": "httpx_1.12.0_checksums.txt",
+    "assets": {
+      "amd64": "httpx_1.12.0_linux_amd64.zip",
+      "arm64": "httpx_1.12.0_linux_arm64.zip"
+    },
+    "install_as": "httpx-pd"
+  },
+  {
+    "repository": "projectdiscovery/katana",
+    "version": "v1.8.0",
+    "binary": "katana",
+    "checksums": "katana-1.8.0-checksums.txt",
+    "assets": {
+      "amd64": "katana_1.8.0_linux_amd64.zip",
+      "arm64": "katana_1.8.0_linux_arm64.zip"
+    }
+  },
+  {
+    "repository": "projectdiscovery/nuclei",
+    "version": "v3.11.1",
+    "binary": "nuclei",
+    "checksums": "nuclei_3.11.1_checksums.txt",
+    "assets": {
+      "amd64": "nuclei_3.11.1_linux_amd64.zip",
+      "arm64": "nuclei_3.11.1_linux_arm64.zip"
+    }
+  },
+  {
+    "repository": "projectdiscovery/naabu",
+    "version": "v2.7.0",
+    "binary": "naabu",
+    "checksums": "naabu-checksums.txt",
+    "assets": {
+      "amd64": "naabu_2.7.0_linux_amd64.zip",
+      "arm64": "naabu_2.7.0_linux_arm64.zip"
+    }
+  },
+  {
+    "repository": "projectdiscovery/interactsh",
+    "version": "v1.4.1",
+    "binary": "interactsh-client",
+    "checksums": "interactsh_1.4.1_checksums.txt",
+    "assets": {
+      "amd64": "interactsh-client_1.4.1_linux_amd64.zip",
+      "arm64": "interactsh-client_1.4.1_linux_arm64.zip"
+    }
+  }
+]

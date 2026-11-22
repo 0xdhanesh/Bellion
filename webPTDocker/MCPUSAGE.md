@@ -265,3 +265,29 @@ This exercises real image/MCP interactions with local fixtures. The registration
 syntax was checked against installed client help and linked documentation on
 2026-11-22; this guide does not claim authenticated end-to-end sessions in every
 client or live device/provider verification.
+
+## ProjectDiscovery operations through MCP
+
+The bridge also permits `subfinder`, `dnsx`, `httpx-pd`, `katana`, `nuclei`,
+`naabu`, and `interactsh-client`. Request argument arrays, not shell pipelines.
+For example, ask any configured client:
+
+> Using webPTDocker, probe only the URLs in /workspace/urls.txt with httpx-pd.
+> Save status codes, titles, and technology guesses as JSONL to
+> /workspace/http.jsonl. Report errors and do not expand the target list.
+
+> Use webPTDocker to run Nuclei against my authorized /workspace/urls.txt,
+> using /opt/nuclei-templates, high/critical severity, at 5 requests per second.
+> Disable Interactsh with -ni and update checks with -duc. Save JSONL to
+> /workspace/nuclei.jsonl. Use a 120-second command timeout and clearly report
+> partial coverage if it expires; do not treat matches as verified exploitation.
+
+> Discover passive subdomain candidates for example.com using Subfinder in
+> webPTDocker. Save them to /workspace/subdomains.txt. Do not resolve or probe
+> discovered hosts until they have been checked against the engagement scope.
+
+The bundled Nuclei template snapshot is read-only. Updating templates is an
+explicit network operation; use a writable directory under `/workspace`.
+Naabu should use `-scan-type c` in the default non-root container. Katana headless
+mode needs additional browser prerequisites. Interactsh runs are bounded by the
+bridge timeout and are not persistent services; use the shell for ongoing OAST.

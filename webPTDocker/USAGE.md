@@ -85,6 +85,41 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `mitmproxy` | `mitmproxy --listen-host 0.0.0.0 --listen-port 8080` | Interactive flow viewer; q opens the quit prompt. |
 | `python3` | `python3 -c 'import requests; r=requests.get("https://example.com", timeout=15); print(r.status_code)'` | HTTP status from a small requests script. |
 
+### ProjectDiscovery discovery and checks
+
+These commands run inside the container. Supply your authorized scope, target
+lists, and wordlists. The image pins binaries in [releases.json](releases.json).
+ProjectDiscovery HTTPX is installed as `httpx-pd` to distinguish it from Python's
+unrelated `httpx` executable.
+
+| Executable | Starter operation | Expected output |
+| --- | --- | --- |
+| `subfinder` | `subfinder -d example.com -silent -o /workspace/subdomains.txt` | Passive-source subdomain candidates; source/API availability affects coverage. |
+| `dnsx` | `dnsx -l /workspace/subdomains.txt -a -resp -o /workspace/dns.txt` | Resolved records and addresses, or no answers/errors. |
+| `httpx-pd` | `httpx-pd -l /workspace/urls.txt -sc -title -tech-detect -json -o /workspace/http.jsonl` | HTTP status, titles, and technology guesses in JSONL. |
+| `katana` | `katana -u https://example.com -d 2 -cs '^https://example\.com/' -rl 5 -jsonl -o /workspace/crawl.jsonl` | Crawled URL/endpoint observations within the configured scope. |
+| `nuclei` | `nuclei -l /workspace/urls.txt -t /opt/nuclei-templates -severity high,critical -rl 5 -ni -duc -jsonl -o /workspace/nuclei.jsonl` | Template matches or an empty report; OAST is disabled by `-ni`. |
+| `naabu` | `naabu -host example.com -p 80,443 -scan-type c -rate 5 -duc -o /workspace/ports.txt` | TCP-connect port discoveries without raw-socket capabilities. |
+| `interactsh-client` | `interactsh-client -o /workspace/interactions.txt` | Generated OAST address and received interactions; keeps polling until stopped. |
+
+Use `-version` for installed versions and `-h` for each tool's complete flags.
+`urls.txt` must contain the exact authorized HTTP(S) targets. Nuclei templates
+are bundled at build time; review the chosen templates for your engagement.
+To download an updated writable copy deliberately:
+
+```bash
+nuclei -ut -ud /workspace/nuclei-templates
+# Then use -t /workspace/nuclei-templates for the desired scan.
+```
+
+For Subfinder API keys, supply your provider YAML via
+`-pc /workspace/provider-config.yaml`. Keep that file out of version control.
+Katana examples use standard crawling; no headless browser is bundled. Interactsh
+uses an external service unless configured otherwise and is best run in a shell
+for ongoing interaction collection. Its address exists only for the running
+session. Templates, reports, and updates can exceed 16 MiB: increase/remove the
+launch's `fsize` limit when you deliberately need larger files.
+
 ### Publish a local interception proxy
 
 Run this **on the host**, from the repository root:
