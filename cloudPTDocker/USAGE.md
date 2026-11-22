@@ -1,6 +1,6 @@
 # cloudPTDocker: command-line usage
 
-Cloud and container configuration assessment. Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
+Cloud configuration assessment. Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
 For agent clients, see [MCPUSAGE.md](MCPUSAGE.md); for image limitations, see [README.md](README.md).
 
 ## 1. Build on the host
@@ -73,36 +73,15 @@ Use its help for all options. Report files under `/workspace` persist on the hos
 | `aws` | `aws sts get-caller-identity --output json` | AWS account, principal ARN and user ID for the configured identity. |
 | `az` | `az account show --output json` | Current Azure tenant/subscription metadata after authentication. |
 | `gcloud` | `gcloud projects list --format=json` | Google Cloud projects visible to the authenticated identity. |
-| `trivy` | `trivy config --skip-check-update --misconfig-scanners dockerfile --format json --output /workspace/iac.json /workspace/iac` | IaC findings JSON using bundled checks; this does not query a cloud account. |
 | `openssl` | `openssl x509 -in /workspace/certificate.pem -text -noout` | Certificate properties; does not establish a trusted chain. |
 | `curl` | `curl -I --max-time 15 https://LAB_HOST` | Response headers from an authorized lab endpoint. |
-| `jq` | `jq . /workspace/iac.json` | Formatted Trivy JSON report. |
+| `jq` | `jq '.Account' /workspace/identity.json` | A field selected from a saved CLI JSON report. |
 | `python3` | `python3 -c 'import boto3; print(boto3.__version__)'` | Installed AWS SDK version; no cloud API call. |
-
-### Local configuration and image scanning
-
-Inside the container, with your supplied IaC folder or Docker image archive:
-
-```bash
-trivy config --skip-check-update --format json --output /workspace/iac.json /workspace/iac
-trivy fs --scanners secret --format json --output /workspace/secrets.json /workspace/source
-# Vulnerability scanning usually downloads a database first:
-trivy image --input /workspace/image.tar --format json --output /workspace/image-report.json
-```
-
-Secret reports can contain sensitive material. Treat the results as confidential.
-Image vulnerability scans need a vulnerability database and potentially a Java
-database, depending on the input. They are not bundled. To retain downloaded
-state, add `--cache-dir /workspace/trivy-cache` to Trivy commands. Once the
-required databases are available, use `--skip-db-update` and, when applicable,
-`--skip-java-db-update` for a deliberate offline run. Do not assume a first
-vulnerability scan works without internet. Configuration scans can use bundled
-checks with `--skip-check-update`. No Docker-socket mount is needed for archives.
 
 ### Authenticate only to the intended cloud account
 
-AWS CLI **v1**, Azure CLI, Google Cloud CLI, and Trivy are pinned in
-[versions.json](versions.json) and [releases.json](releases.json). AWS and Azure
+AWS CLI **v1**, Azure CLI and Google Cloud CLI are pinned in
+[versions.json](versions.json). AWS and Azure
 CLIs have isolated Python environments to avoid changing the MCP bridge's
 libraries. Google Cloud's archive SHA-256 values are recorded in
 [gcloud-release.json](gcloud-release.json).
@@ -167,8 +146,7 @@ creation or modification when the engagement calls for read-only assessment.
 
 Sources: [AWS CLI](https://github.com/aws/aws-cli),
 [Azure CLI](https://github.com/Azure/azure-cli),
-[Google Cloud installation](https://docs.cloud.google.com/sdk/docs/install-sdk),
-[Trivy](https://github.com/aquasecurity/trivy).
+[Google Cloud installation](https://docs.cloud.google.com/sdk/docs/install-sdk).
 
 
 

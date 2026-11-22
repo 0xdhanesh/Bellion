@@ -1,0 +1,69 @@
+[
+  {
+    "name": "JADX 1.5.6 CLI",
+    "url": "https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip",
+    "sha256": "545ea2be9c242511bc145755cf4bda2485ade42966e096f8b4d3da2a230e8974",
+    "install": "zip",
+    "dest": "/opt/jadx"
+  },
+  {
+    "name": "frida-server 17.23.2 android-arm64",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-server-17.23.2-android-arm64.xz",
+    "sha256": "6ec50a2d2361c8510c7aa4736b6540f28bb98a337957ff28949f71c8e362ad5b",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-server-17.23.2-android-arm64",
+    "mode": "0755"
+  },
+  {
+    "name": "frida-server 17.23.2 android-arm",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-server-17.23.2-android-arm.xz",
+    "sha256": "6d63dba80138b5eaea5d090a08a1d3164a6d00db96a5707c07a19318f7ffed86",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-server-17.23.2-android-arm",
+    "mode": "0755"
+  },
+  {
+    "name": "frida-server 17.23.2 android-x86_64",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-server-17.23.2-android-x86_64.xz",
+    "sha256": "05e05fe9a048c177eab63c9dc96d0d02b4d2294d3fbd98e91f477021601df02b",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-server-17.23.2-android-x86_64",
+    "mode": "0755"
+  },
+  {
+    "name": "frida-server 17.23.2 android-x86",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-server-17.23.2-android-x86.xz",
+    "sha256": "cfe8a5318a4bf35c3d434d12f56f2527c408349e8bec3b00ad81ffd926f4b704",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-server-17.23.2-android-x86",
+    "mode": "0755"
+  },
+  {
+    "name": "frida-gadget 17.23.2 android-arm64",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-gadget-17.23.2-android-arm64.so.xz",
+    "sha256": "5b4cfb2be40d1a720b39be8b3d9abdcb217c1d26b38bceb2740db9fac150b021",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-gadget-17.23.2-android-arm64.so"
+  },
+  {
+    "name": "frida-gadget 17.23.2 android-arm",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-gadget-17.23.2-android-arm.so.xz",
+    "sha256": "5978ed8e094c55ae71731f21319f40052739e3ce0253ef89a5cf91e54da7ea38",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-gadget-17.23.2-android-arm.so"
+  },
+  {
+    "name": "frida-gadget 17.23.2 android-x86_64",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-gadget-17.23.2-android-x86_64.so.xz",
+    "sha256": "d6b86a79206678ca6a3afe36081246af06e8b9bb4f0e22f305cf54f9f5caf78f",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-gadget-17.23.2-android-x86_64.so"
+  },
+  {
+    "name": "frida-gadget 17.23.2 android-x86",
+    "url": "https://github.com/frida/frida/releases/download/17.23.2/frida-gadget-17.23.2-android-x86.so.xz",
+    "sha256": "e8d464763a4b2010cf9ca78878d8c9394f64d579ff75ed719586cd8e94eec0c8",
+    "install": "xz",
+    "dest": "/opt/frida/android/frida-gadget-17.23.2-android-x86.so"
+  }
+]

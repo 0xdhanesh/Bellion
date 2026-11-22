@@ -81,3 +81,6 @@ htmlcov/
 # Git
 *.orig
 *.rej
+
+# Downloaded test fixtures (see scripts/verify.sh)
+tests/fixtures/

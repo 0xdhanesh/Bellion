@@ -26,7 +26,7 @@ command -v docker
 On the host, after step 1:
 
 ```bash
-claude mcp add --transport stdio --scope user mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
+claude mcp add --transport stdio --scope user mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
   mobileptdocker:latest python3 /opt/security/mcp_server.py
 claude mcp list
 claude mcp get mobilePTDocker
@@ -45,7 +45,7 @@ Start or restart Claude Code, then open `/mcp` to inspect the connection.
 On the host, after step 1:
 
 ```bash
-codex mcp add mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
+codex mcp add mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
   mobileptdocker:latest python3 /opt/security/mcp_server.py
 codex mcp list
 codex mcp get mobilePTDocker
@@ -68,7 +68,7 @@ This means the local `grok` coding CLI, not a hosted Grok conversation. On the
 host, after step 1:
 
 ```bash
-grok mcp add --scope user mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
+grok mcp add --scope user mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
   mobileptdocker:latest python3 /opt/security/mcp_server.py
 grok mcp list
 grok mcp doctor mobilePTDocker
@@ -82,7 +82,7 @@ For longer commands set `tool_timeout_sec = 330` for this server in `~/.grok/con
 On the host, after step 1:
 
 ```bash
-agy mcp add --type stdio mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
+agy mcp add --type stdio mobilePTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
   mobileptdocker:latest python3 /opt/security/mcp_server.py
 agy mcp list
 ```
@@ -181,7 +181,7 @@ see [USAGE.md](USAGE.md). Calls have no interactive stdin and a 1–300 second
 execution timeout; the bridge kills the command's process group when it ends.
 Detached services cannot be kept running across bridge calls. Each output stream
 is capped at 64 KiB; save larger output under `/workspace`. Supplied launch args
-also cap individual files at 16 MiB; adjust `fsize` deliberately if needed.
+also cap individual files at 2 GiB (Ghidra and JADX workspaces outgrow 16 MiB); adjust `fsize` deliberately if needed.
 
 Device settings must also be present in the MCP Docker args: add the ADB server environment variable, Linux host-gateway mapping, or usbmuxd socket mount before the image as needed. A shell container and an MCP container are separate processes. Use finite ADB log dumps; interactive Frida sessions belong in the shell. Frida script loading and app installation change device state.
 
@@ -203,7 +203,7 @@ mount or privileged container is required.
 | Tool unavailable after editing configuration | Restart/reload the MCP server and inspect the client's MCP manager. |
 | Permission denied for a report | Check host directory ownership and native Linux UID mapping. |
 | Truncated output or timeout | Request a bounded operation, save a report file, and align client/bridge deadlines. |
-| External engine or device unavailable | Follow the environment-specific prerequisites; connection alone does not install them. |
+| External engine or device unavailable | Engines are bundled: run `rea doctor` in the image. Devices and proprietary engines remain external. |
 
 On the host, from the repository root:
 
@@ -215,3 +215,51 @@ This exercises real image/MCP interactions with local fixtures. The registration
 syntax was checked against installed client help and linked documentation on
 2026-11-22; this guide does not claim authenticated end-to-end sessions in every
 client or live device/provider verification.
+
+## 10. Connect the native REA server as well
+
+The repository's `mcp.json` calls this entry `rea`. If another plugin already
+registers that name, rename it; the commands below use `mobile-rea`. It is optional
+and independent of the command bridge. Its engines (JADX headless MCP 0.7.1 and Ghidra 12.2) are bundled and
+configured inside the image: do not run `rea setup` or set engine paths in the
+client. Run the applicable command from the host directory you want mounted as
+`/workspace`:
+
+### Claude Code
+
+```bash
+claude mcp add --transport stdio --scope user mobile-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
+  mobileptdocker:latest rea mcp
+```
+
+### Codex
+
+```bash
+codex mcp add mobile-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
+  mobileptdocker:latest rea mcp
+```
+
+### Grok Build
+
+```bash
+grok mcp add --scope user mobile-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
+  mobileptdocker:latest rea mcp
+```
+
+### Antigravity
+
+```bash
+agy mcp add --type stdio mobile-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=2147483648:2147483648 --mount "type=bind,src=$(pwd),dst=/workspace" \
+  mobileptdocker:latest rea mcp
+```
+
+For Claude Desktop or Antigravity JSON, merge the `rea` entry from
+[mcp.json](mcp.json), rename its key if needed, and replace the workspace path.
+For Codex/Grok TOML, use the bridge's args above but replace the final
+`"python3", "/opt/security/mcp_server.py"` pair with `"rea", "mcp"`. Native
+decompilation can take minutes on large inputs: give the client a generous tool
+deadline.
+
+Ask the client to discover `mobile-rea` tools, then inspect `/workspace/app.apk`
+as an Android package and decompile selected classes or native `.so` functions. Export needed evidence before ending the REA session; files in the
+shared mount persist, while in-memory sessions do not.

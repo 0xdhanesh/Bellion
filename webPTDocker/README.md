@@ -61,7 +61,7 @@ has its own container; files persist only in mounted storage.
 
 ## Limitations and access
 
-No Burp Suite, browser UI, commercial scanners, or bundled wordlists. mitmproxy certificates are created on first use; explicitly trust the lab CA on test devices if intercepting HTTPS. Publish a proxy only when needed with `-p 127.0.0.1:8080:8080`.
+No Burp Suite, browser, commercial scanners, or bundled wordlists; supply wordlists in `/workspace`. mitmproxy certificates are created on first use; explicitly trust the lab CA on test devices if intercepting HTTPS. Publish a proxy only when needed with `-p 127.0.0.1:8080:8080`.
 
 Treat MCP access as code execution: Python, debuggers, and tool scripting options
 can access all container files and network endpoints. The command manifest is a
@@ -92,7 +92,7 @@ The image bundles Nuclei templates v10.5.2 under `/opt/nuclei-templates`.
 Use `-t /opt/nuclei-templates` explicitly. For portable runtime state, mount
 `./workspace` and put provider configuration, templates, wordlists and reports
 there. No provider API keys or wordlists are shipped. Subfinder's coverage depends
-on configured sources. Katana's headless mode needs a separate browser setup.
+on configured sources. Katana's standard crawler works as is; its headless mode needs a browser, which is not bundled.
 Naabu defaults here should use TCP connect mode (`-scan-type c`) with dropped
 capabilities. Interactsh contacts an external OAST service when started; run it
 only when that interaction is intended. Nuclei template matches need validation.

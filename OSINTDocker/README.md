@@ -4,7 +4,7 @@ OSINT and artifact/website reconnaissance. Maintainer: **0xdhanesh** <dhanesh.pr
 
 ## Included tools
 
-Executables: `rea`, `androguard`, `apktool`, `binwalk`, `curl`, `wget`, `dig`, `host`, `nslookup`, `whois`, `exiftool`, `file`, `strings`, `readelf`, `nmap`, `openssl`, `rg`, `jq`, `python3`.
+Executables: `rea`, `java`, `androguard`, `apktool`, `binwalk`, `curl`, `wget`, `dig`, `host`, `nslookup`, `whois`, `exiftool`, `file`, `strings`, `readelf`, `nmap`, `openssl`, `rg`, `jq`, `python3`.
 
 Python libraries/packages: `androguard>=4.1,<5`, `beautifulsoup4>=4.12,<5`, `dnspython>=2.7,<3`, `requests>=2.32,<3`.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
@@ -64,7 +64,7 @@ has its own container; files persist only in mounted storage.
 
 ## Limitations and access
 
-DNS, WHOIS, and certificate queries avoid direct probing of the target website but still contact third parties; nmap and HTTP requests are active recon. REA is installed with its CLI and native MCP server; Ghidra, IDA, Hopper, JADX, Chromium/CDP, and proprietary engines are not bundled. APK archive inspection works with apktool/Androguard; REA Android code analysis needs an external compatible JADX installation. Website runtime analysis needs an externally configured reachable browser/CDP endpoint. A URL is not a local JavaScript tree: download/export the relevant artifacts first, or use REA browser workflows. No paid API accounts or recon service credentials are included.
+DNS, WHOIS, and certificate queries avoid direct probing of the target website but still contact third parties; nmap and HTTP requests are active recon. REA is installed with its CLI and native MCP server, plus its bundled engines: the jadx-headless-mcp 0.7.1 JAR for Android code analysis (`REA_JADX_MCP_JAR`), configured with `ENV` in the image, so no host install or path setting is needed. No browser is bundled, so REA's browser and website-runtime workflows are unavailable in this image. Native decompilation (Ghidra) lives in mobilePTDocker and reDocker. Proprietary engines (IDA, Hopper, JEB, Kuna) are not redistributable and are not bundled. A URL is not a local JavaScript tree: download/export the relevant artifacts first, or use REA browser workflows. No paid API accounts or recon service credentials are included.
 
 Treat MCP access as code execution: Python, debuggers, and tool scripting options
 can access all container files and network endpoints. The command manifest is a

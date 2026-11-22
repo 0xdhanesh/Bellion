@@ -1,0 +1,16 @@
+[
+  {
+    "name": "WABT 1.0.42 (REA WebAssembly provider)",
+    "url": {
+      "amd64": "https://github.com/WebAssembly/wabt/releases/download/1.0.42/wabt-1.0.42-linux-x64.tar.gz",
+      "arm64": "https://github.com/WebAssembly/wabt/releases/download/1.0.42/wabt-1.0.42-linux-arm64.tar.gz"
+    },
+    "sha256": {
+      "amd64": "84895407a6bbb80e918f33b16b2fb2206021c150b6bc9ff6f761263a745ab131",
+      "arm64": "a7632c1cc66f70886441842ecf5a2ffa91a98c79e026059458451234ad013ea8"
+    },
+    "install": "tar",
+    "dest": "/opt/wabt",
+    "strip": 1
+  }
+]

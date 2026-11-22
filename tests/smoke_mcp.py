@@ -106,8 +106,6 @@ def check_ad_tools():
 
 
 def check_cloud_tools():
-    from pathlib import Path
-    import tempfile
     import boto3
     from botocore.stub import Stubber
 
@@ -115,7 +113,6 @@ def check_cloud_tools():
     versions = json.loads(subprocess.check_output(['az', 'version', '--output', 'json'], text=True))
     assert versions['azure-cli'] == '2.93.0', versions
     assert '594.0.0' in subprocess.check_output(['gcloud', '--version'], text=True)
-    subprocess.run(['trivy', '--version'], check=True, stdout=subprocess.DEVNULL)
     # Explicit fake credentials and stubbed response: no provider or metadata call.
     client = boto3.client('sts', region_name='us-east-1',
                           aws_access_key_id='fixture', aws_secret_access_key='fixture')
@@ -123,15 +120,23 @@ def check_cloud_tools():
         stub.add_response('get_caller_identity', {'UserId': 'fixture', 'Account': '123456789012',
                           'Arn': 'arn:aws:iam::123456789012:user/fixture'})
         assert client.get_caller_identity()['Account'] == '123456789012'
+    print('PASS: cloud CLI startup and stubbed AWS SDK')
+
+
+def check_crypt_tools():
+    from pathlib import Path
+    import tempfile
+    devices = subprocess.run(['hashcat', '-I'], text=True, capture_output=True, timeout=120)
+    assert devices.returncode == 0 and 'OpenCL' in devices.stdout, (devices.stdout, devices.stderr)
     with tempfile.TemporaryDirectory() as directory:
-        Path(directory, 'Dockerfile').write_text('FROM ubuntu:24.04\nRUN echo fixture\n')
-        result = subprocess.run(['trivy', 'config', '--skip-check-update',
-                                 '--misconfig-scanners', 'dockerfile', '--format', 'json', directory],
-                                text=True, capture_output=True, timeout=90)
-        assert result.returncode == 0, (result.stdout, result.stderr)
-        report = json.loads(result.stdout)
-        assert any(row.get('Misconfigurations') for row in report.get('Results', [])), report
-    print('PASS: cloud CLI startup, stubbed AWS SDK, and offline Trivy misconfiguration detection')
+        hashes, words = Path(directory, 'hash.txt'), Path(directory, 'words.txt')
+        hashes.write_text('5f4dcc3b5aa765d61d8327deb882cf99\n')  # MD5("password")
+        words.write_text('letmein\npassword\n')
+        result = subprocess.run(['hashcat', '-m', '0', '-a', '0', '--potfile-disable', '--quiet',
+                                 '--outfile', str(Path(directory, 'out.txt')), '--outfile-format', '2',
+                                 str(hashes), str(words)], text=True, capture_output=True, timeout=300)
+        assert Path(directory, 'out.txt').read_text().strip() == 'password', (result.stdout, result.stderr)
+    print('PASS: hashcat cracks with the bundled PoCL CPU OpenCL runtime')
 
 
 async def main():
@@ -168,6 +173,7 @@ async def main():
         assert SHA256.new(b'abc').hexdigest() == 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
         import sympy
         assert sympy.factorint(65535) == {3: 1, 5: 1, 17: 1, 257: 1}
+        check_crypt_tools()
     params = StdioServerParameters(command=sys.executable, args=['/opt/security/mcp_server.py'])
     async with stdio_client(params) as (read, write):
         async with ClientSession(read, write) as session:

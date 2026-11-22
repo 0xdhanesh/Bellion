@@ -16,6 +16,14 @@
     "yara",
     "pwn",
     "checksec",
+    "rea",
+    "rizin",
+    "rz-bin",
+    "wasm-objdump",
+    "wasm2wat",
+    "wasm-validate",
+    "java",
+    "analyzeHeadless",
     "python3"
   ]
 }

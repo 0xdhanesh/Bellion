@@ -62,7 +62,7 @@ has its own container; files persist only in mounted storage.
 
 ## Limitations and access
 
-No SageMath, GPU runtime, or hash corpus is bundled. Hashcat may have no usable OpenCL backend; CPU math and OpenSSL remain available. GPU passthrough requires compatible native Linux drivers and an additional runtime; Docker Desktop on macOS does not provide CUDA. Distribution John supports fewer formats than Jumbo. Static review and test vectors cannot prove a cryptographic implementation secure.
+No SageMath or GPU runtime is bundled. Hashcat runs on the CPU through the bundled PoCL OpenCL runtime; supply wordlists in `/workspace`. GPU passthrough requires compatible native Linux drivers and an additional runtime; Docker Desktop on macOS does not provide CUDA. Distribution John supports fewer formats than Jumbo. Static review and test vectors cannot prove a cryptographic implementation secure.
 
 Treat MCP access as code execution: Python, debuggers, and tool scripting options
 can access all container files and network endpoints. The command manifest is a

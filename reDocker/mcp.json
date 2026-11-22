@@ -9,12 +9,29 @@
         "--cap-drop=ALL",
         "--security-opt=no-new-privileges",
         "--ulimit",
-        "fsize=16777216:16777216",
+        "fsize=2147483648:2147483648",
         "--mount",
         "type=bind,src=/ABSOLUTE/PATH/TO/workspace,dst=/workspace",
         "redocker:latest",
         "python3",
         "/opt/security/mcp_server.py"
+      ]
+    },
+    "rea": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--ulimit",
+        "fsize=2147483648:2147483648",
+        "--mount",
+        "type=bind,src=/ABSOLUTE/PATH/TO/workspace,dst=/workspace",
+        "redocker:latest",
+        "rea",
+        "mcp"
       ]
     }
   }

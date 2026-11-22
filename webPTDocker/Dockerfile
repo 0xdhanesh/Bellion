@@ -38,6 +38,7 @@ ARG NUCLEI_TEMPLATES_VERSION=v10.5.2
 RUN git clone --depth 1 --branch "$NUCLEI_TEMPLATES_VERSION" \
     https://github.com/projectdiscovery/nuclei-templates.git /opt/nuclei-templates \
     && rm -rf /opt/nuclei-templates/.git
+ENV NUCLEI_TEMPLATES=/opt/nuclei-templates
 COPY shared/requirements.txt /opt/security/mcp-requirements.txt
 COPY webPTDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \

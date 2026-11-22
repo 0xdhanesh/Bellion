@@ -261,8 +261,9 @@ Ask the client to discover `osint-rea` tools, then call
 `analyze_javascript_application` with `input_path` `/workspace/extracted-app`.
 REA returns its own structured evidence, coverage, and limitations, rather than
 the bridge's stdout/exit-code wrapper. For APK/IPA inventory, ask for an artifact
-inventory and let the client use the exposed schemas. Requesting native
-pseudocode still requires a compatible configured engine. Export needed evidence
+inventory and let the client use the exposed schemas. Android code analysis uses the bundled
+JADX engine (no browser is bundled); for native pseudocode use
+the `rea` entry of mobilePTDocker or reDocker, which bundle Ghidra. Export needed evidence
 before ending the REA session; files in the shared mount persist, while
 in-memory sessions do not. See the
 [REA installation guide](https://github.com/morluto/rea/blob/main/docs/getting-started/installation.md).

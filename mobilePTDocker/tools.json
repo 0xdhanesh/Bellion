@@ -15,6 +15,12 @@
     "readelf",
     "strings",
     "unzip",
+    "rea",
+    "jadx",
+    "apksigner",
+    "zipalign",
+    "java",
+    "analyzeHeadless",
     "python3"
   ]
 }

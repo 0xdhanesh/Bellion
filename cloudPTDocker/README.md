@@ -1,11 +1,11 @@
 # cloudPTDocker
 
-Cloud and container configuration assessment, with a non-root shell and local stdio MCP bridge.
+Cloud configuration assessment, with a non-root shell and local stdio MCP bridge.
 Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
 
 ## Included tools
 
-`aws`, `az`, `gcloud`, `trivy`, `openssl`, `curl`, `jq`, `python3`.
+`aws`, `az`, `gcloud`, `openssl`, `curl`, `jq`, `python3`.
 
 ## Build and spawn
 
@@ -38,15 +38,15 @@ needed files. There is no HTTP MCP endpoint or host Docker-socket mount.
 - [USAGE.md](USAGE.md): all exposed commands, expected outputs, runtime requirements, and troubleshooting.
 - [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup and operation prompts.
 
-Cloud identities, account permissions, and provider connectivity are external prerequisites. No credentials are embedded. AWS CLI v1 is included (not v2 SSO login). Azure and Google Cloud interactive logins belong in a shell with separately mounted persistent configuration directories, which must also be added to the MCP Docker args. Vulnerability databases are not bundled; Trivy configuration scans can use embedded checks offline, while vulnerability scans need an available database. No Kubernetes client, VPN, or automatic cloud remediation is included.
+Cloud identities, account permissions, and provider connectivity are external prerequisites. No credentials are embedded. AWS CLI v1 is included (not v2 SSO login). Azure and Google Cloud interactive logins belong in a shell with separately mounted persistent configuration directories, which must also be added to the MCP Docker args. No Kubernetes client, VPN, or automatic cloud remediation is included.
 
 Use `./scripts/verify.sh cloudPTDocker` to build and run the offline MCP/tool checks.
 
 ## Pinned tooling
 
-AWS CLI v1.46.3, Azure CLI 2.93.0, Google Cloud CLI 594.0.0, and Trivy v0.76.2
+AWS CLI v1.46.3, Azure CLI 2.93.0, and Google Cloud CLI 594.0.0
 are recorded in [versions.json](versions.json). AWS/Azure run in isolated Python
-environments. Release archives use SHA-256 verification; the Google SDK archive
+environments. The Google SDK archive SHA-256
 pins are in [gcloud-release.json](gcloud-release.json). Both amd64 and arm64 have
 explicit archive mappings. Database downloads, credential setup, and cloud API
 access are separate runtime operations; nothing logs in during the build.
