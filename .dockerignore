@@ -13,6 +13,8 @@
 !OSINTDocker/**
 !networkPTDocker/
 !networkPTDocker/**
+!adPTDocker/
+!adPTDocker/**
 **/README.md
 **/compose.yaml
 **/mcp.json

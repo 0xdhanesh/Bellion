@@ -89,10 +89,26 @@ def check_network_tools():
     print('PASS: offline packet parsing with TShark, capinfos, tcpdump; Nmap starts')
 
 
+
+def check_ad_tools():
+    from impacket.smb3structs import SMB2Packet
+    packet = SMB2Packet()
+    packet['TreeID'] = 42
+    encoded = packet.getData()
+    parsed = SMB2Packet(encoded)
+    assert encoded.startswith(b'\xfeSMB') and parsed['TreeID'] == 42, encoded
+    for tool in ['GetADUsers.py', 'GetUserSPNs.py', 'findDelegation.py',
+                 'smbclient.py', 'rpcdump.py', 'lookupsid.py', 'mssqlclient.py']:
+        subprocess.run([tool, '-h'], check=True, stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL, timeout=30)
+    print('PASS: Impacket SMB2 serialization and AD client startup; no domain contacted')
+
+
 async def main():
     assert subprocess.check_output(['whoami'], text=True).strip() == '0xdhanesh'
     modules = {
         'networkPTDocker': [],
+        'adPTDocker': ['impacket', 'ldap3', 'dns'],
         'webPTDocker': ['bs4', 'requests', 'mitmproxy'],
         'mobilePTDocker': ['androguard', 'frida'],
         'reDocker': ['capstone', 'lief', 'pefile', 'pwnlib', 'elftools', 'unicorn'],
@@ -108,6 +124,8 @@ async def main():
         subprocess.run(['apktool', '--version'], check=True)
     if os.environ['SECURITY_ENV'] == 'mobilePTDocker':
         subprocess.run(['frida', '--version'], check=True)
+    if os.environ['SECURITY_ENV'] == 'adPTDocker':
+        check_ad_tools()
     if os.environ['SECURITY_ENV'] == 'networkPTDocker':
         check_network_tools()
     if os.environ['SECURITY_ENV'] == 'reDocker':

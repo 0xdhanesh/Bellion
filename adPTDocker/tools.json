@@ -1,0 +1,24 @@
+{
+  "commands": [
+    "GetADUsers.py",
+    "GetUserSPNs.py",
+    "findDelegation.py",
+    "smbclient.py",
+    "rpcdump.py",
+    "lookupsid.py",
+    "mssqlclient.py",
+    "kinit",
+    "klist",
+    "kvno",
+    "ldapsearch",
+    "smbclient",
+    "rpcclient",
+    "dig",
+    "host",
+    "nslookup",
+    "openssl",
+    "curl",
+    "jq",
+    "python3"
+  ]
+}

@@ -1,12 +1,12 @@
 # Shell helpers for this project
 
 These Bash/Zsh functions adapt the pasted Docker shortcuts to this repository's
-five images. Add them to `~/.zshrc` or `~/.bashrc`, then reload that file with
+available images. Add them to `~/.zshrc` or `~/.bashrc`, then reload that file with
 `source ~/.zshrc` or `source ~/.bashrc`. Build the images once from the repository
 root before using the helpers from any directory:
 
 ```bash
-for environment in webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker; do
+for environment in webPTDocker mobilePTDocker reDocker cryptDocker OSINTDocker networkPTDocker adPTDocker; do
   image=$(printf '%s' "$environment" | tr '[:upper:]' '[:lower:]')
   docker build -f "$environment/Dockerfile" -t "$image:latest" .
 done
@@ -46,7 +46,7 @@ dockershellshhere() {
     _securitydockerhere -it --entrypoint=/bin/sh "$@"
 }
 
-# Open a shell in one of the five environments, with the current folder mounted.
+# Open a shell in one of the available environments, with the current folder mounted.
 webpthere() {
     dockershellhere webptdocker:latest "$@"
 }
@@ -65,6 +65,14 @@ crypthere() {
 
 osinthere() {
     dockershellhere osintdocker:latest "$@"
+}
+
+networkpthere() {
+    dockershellhere networkptdocker:latest "$@"
+}
+
+adpthere() {
+    dockershellhere adptdocker:latest "$@"
 }
 
 # Direct tool shortcuts, using tools actually installed in these images.
