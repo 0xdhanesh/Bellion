@@ -100,3 +100,8 @@ host usbmuxd service. Pairing and trust must be established; socket permissions
 must permit UID 10001. `idevice_id -l` checks connectivity. This exposes the host's
 usbmuxd device access. On macOS, use host-side libimobiledevice/Frida for USB
 sessions; offline APK/IPA work remains available in this container.
+
+## Usage guides
+
+- [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
+- [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.
