@@ -1,0 +1,20 @@
+{
+  "commands": [
+    "adb",
+    "apktool",
+    "androguard",
+    "frida",
+    "frida-ps",
+    "frida-trace",
+    "idevice_id",
+    "ideviceinfo",
+    "idevicepair",
+    "idevicesyslog",
+    "ideviceinstaller",
+    "plistutil",
+    "readelf",
+    "strings",
+    "unzip",
+    "python3"
+  ]
+}
