@@ -18,6 +18,40 @@ Start Docker Desktop or Docker Engine, choose an environment, and follow its
 command guide. Build from the repository root so Docker can access `shared/`.
 Each environment's documentation covers tools, expected outputs, and limitations.
 
+## Quick shell access
+
+After building an image, add these Bash/Zsh helpers to `~/.bashrc` or `~/.zshrc`
+and source that file. They use the image's `0xdhanesh` account and the project's
+capability and file-size defaults.
+
+```bash
+dockershell() {
+    docker run --rm -it --entrypoint=/bin/bash \
+        --cap-drop=ALL --security-opt=no-new-privileges \
+        --ulimit fsize=16777216:16777216 "$@"
+}
+
+dockershellhere() {
+    dockershell --mount "type=bind,src=${PWD},dst=/workspace" \
+        --workdir /workspace "$@"
+}
+```
+
+`dockershellhere` mounts the current folder read/write at `/workspace`, where
+saved results persist on the host. Quote filenames containing spaces. Put any
+extra Docker options before the image name:
+
+```bash
+dockershell webptdocker:latest              # Shell without a host mount
+dockershellhere mobileptdocker:latest       # Android/iOS tools with current folder
+dockershellhere --network=none redocker:latest
+dockershellhere cryptdocker:latest
+dockershellhere osintdocker:latest
+```
+
+See the [full helper guide](docs/SHELL_HELPERS.md) for tool and MCP shortcuts,
+and each environment's usage guide for Linux workspace permissions.
+
 ## Project resources
 
 - [Shell helpers](docs/SHELL_HELPERS.md): shortcuts for shells, tools, and MCP launchers.
