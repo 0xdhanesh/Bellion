@@ -11,13 +11,12 @@ On the host in a Bash/Zsh terminal, from the repository root:
 ```bash
 mkdir -p adPTDocker/workspace
 docker build -f adPTDocker/Dockerfile -t adptdocker:latest .
-export MCP_WORKSPACE="$PWD/adPTDocker/workspace"
 docker info
 command -v docker
 ```
 
-Keep using that terminal for the registration commands below, so
-`$MCP_WORKSPACE` expands to an existing absolute host path. The client records
+Run the registration commands below from the directory you want mounted as
+`/workspace`: `$(pwd)` expands to that absolute host path. The client records
 that expanded path. JSON/TOML examples instead use a literal placeholder: replace
 `/ABSOLUTE/PATH/TO/workspace` yourself; do not rely on shell expansion in JSON.
 Use the Docker executable's absolute path if a GUI client's PATH cannot find it.
@@ -35,7 +34,7 @@ this repository does not supply a remote HTTP gateway.
 On the host, after step 1:
 
 ```bash
-claude mcp add --transport stdio --scope user adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+claude mcp add --transport stdio --scope user adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   adptdocker:latest python3 /opt/security/mcp_server.py
 claude mcp list
 claude mcp get adPTDocker
@@ -63,7 +62,7 @@ are intended for Bash/Zsh or a configured WSL workflow.
 On the host, after step 1:
 
 ```bash
-codex mcp add adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+codex mcp add adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   adptdocker:latest python3 /opt/security/mcp_server.py
 codex mcp list
 codex mcp get adPTDocker
@@ -106,7 +105,7 @@ This means the local `grok` coding CLI, not a hosted Grok conversation. On the
 host, after step 1:
 
 ```bash
-grok mcp add --scope user adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+grok mcp add --scope user adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   adptdocker:latest python3 /opt/security/mcp_server.py
 grok mcp list
 grok mcp doctor adPTDocker
@@ -124,7 +123,7 @@ See [Grok Build's MCP guide](https://docs.x.ai/build/features/mcp-servers).
 On the host, after step 1:
 
 ```bash
-agy mcp add --type stdio adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+agy mcp add --type stdio adPTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   adptdocker:latest python3 /opt/security/mcp_server.py
 agy mcp list
 ```

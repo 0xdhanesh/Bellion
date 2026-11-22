@@ -11,13 +11,12 @@ On the host in a Bash/Zsh terminal, from the repository root:
 ```bash
 mkdir -p OSINTDocker/workspace
 docker build -f OSINTDocker/Dockerfile -t osintdocker:latest .
-export MCP_WORKSPACE="$PWD/OSINTDocker/workspace"
 docker info
 command -v docker
 ```
 
-Keep using that terminal for the registration commands below, so
-`$MCP_WORKSPACE` expands to an existing absolute host path. The client records
+Run the registration commands below from the directory you want mounted as
+`/workspace`: `$(pwd)` expands to that absolute host path. The client records
 that expanded path. JSON/TOML examples instead use a literal placeholder: replace
 `/ABSOLUTE/PATH/TO/workspace` yourself; do not rely on shell expansion in JSON.
 Use the Docker executable's absolute path if a GUI client's PATH cannot find it.
@@ -35,7 +34,7 @@ this repository does not supply a remote HTTP gateway.
 On the host, after step 1:
 
 ```bash
-claude mcp add --transport stdio --scope user OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+claude mcp add --transport stdio --scope user OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest python3 /opt/security/mcp_server.py
 claude mcp list
 claude mcp get OSINTDocker
@@ -63,7 +62,7 @@ are intended for Bash/Zsh or a configured WSL workflow.
 On the host, after step 1:
 
 ```bash
-codex mcp add OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+codex mcp add OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest python3 /opt/security/mcp_server.py
 codex mcp list
 codex mcp get OSINTDocker
@@ -106,7 +105,7 @@ This means the local `grok` coding CLI, not a hosted Grok conversation. On the
 host, after step 1:
 
 ```bash
-grok mcp add --scope user OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+grok mcp add --scope user OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest python3 /opt/security/mcp_server.py
 grok mcp list
 grok mcp doctor OSINTDocker
@@ -124,7 +123,7 @@ See [Grok Build's MCP guide](https://docs.x.ai/build/features/mcp-servers).
 On the host, after step 1:
 
 ```bash
-agy mcp add --type stdio OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+agy mcp add --type stdio OSINTDocker -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest python3 /opt/security/mcp_server.py
 agy mcp list
 ```
@@ -275,33 +274,33 @@ client or live device/provider verification.
 The repository's `mcp.json` calls this entry `rea`. If another plugin already
 registers that name, rename this entry to `osint-rea`; the commands below use
 that separate name. This is optional and independent of the OSINT command bridge.
-Run the applicable command in the same host terminal with `MCP_WORKSPACE` set:
+Run the applicable command from the host directory you want mounted as `/workspace`:
 
 ### Claude Code
 
 ```bash
-claude mcp add --transport stdio --scope user osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+claude mcp add --transport stdio --scope user osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest rea mcp
 ```
 
 ### Codex
 
 ```bash
-codex mcp add osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+codex mcp add osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest rea mcp
 ```
 
 ### Grok Build
 
 ```bash
-grok mcp add --scope user osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+grok mcp add --scope user osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest rea mcp
 ```
 
 ### Antigravity
 
 ```bash
-agy mcp add --type stdio osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$MCP_WORKSPACE,dst=/workspace" \
+agy mcp add --type stdio osint-rea -- docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges --ulimit fsize=16777216:16777216 --mount "type=bind,src=$(pwd),dst=/workspace" \
   osintdocker:latest rea mcp
 ```
 
