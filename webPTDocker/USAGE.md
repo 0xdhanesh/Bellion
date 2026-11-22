@@ -52,7 +52,7 @@ Inside the shell, `whoami` prints `0xdhanesh`, `pwd` prints `/workspace`, and
 `ls -la /workspace` shows the mounted inputs. `exit` closes and removes the
 container. Files under `/workspace` remain in `webPTDocker/workspace` on the host;
 files elsewhere disappear unless separately mounted. To work from any host
-folder, use the helpers in the [root README](../README.md#shell-helpers-for-this-project).
+folder, use the helpers in the [shell helpers guide](../docs/SHELL_HELPERS.md).
 
 The user is UID 10001, without sudo. On native Linux, either grant this UID
 workspace access or add `--user "$(id -u):$(id -g)" -e HOME=/tmp` before the image
