@@ -8,14 +8,14 @@ Includes MCP integration for Claude, Codex, Grok CLI, and Google Antigravity.
 
 | Environment | Purpose | Command guide | MCP guide |
 | --- | --- | --- | --- |
-| [webPTDocker](webPTDocker/README.md) | Web application pentesting | [Usage](webPTDocker/USAGE.md) | [MCP setup](webPTDocker/MCPUSAGE.md) |
-| [mobilePTDocker](mobilePTDocker/README.md) | Android and iOS assessment | [Usage](mobilePTDocker/USAGE.md) | [MCP setup](mobilePTDocker/MCPUSAGE.md) |
-| [reDocker](reDocker/README.md) | ELF and native binary analysis | [Usage](reDocker/USAGE.md) | [MCP setup](reDocker/MCPUSAGE.md) |
-| [cryptDocker](cryptDocker/README.md) | Cryptographic implementation analysis | [Usage](cryptDocker/USAGE.md) | [MCP setup](cryptDocker/MCPUSAGE.md) |
-| [OSINTDocker](OSINTDocker/README.md) | Artifact and website reconnaissance, including REA | [Usage](OSINTDocker/USAGE.md) | [MCP setup](OSINTDocker/MCPUSAGE.md) |
-| [networkPTDocker](networkPTDocker/README.md) | Network enumeration and packet analysis | [Usage](networkPTDocker/USAGE.md) | [MCP setup](networkPTDocker/MCPUSAGE.md) |
-| [adPTDocker](adPTDocker/README.md) | Windows and Active Directory assessment | [Usage](adPTDocker/USAGE.md) | [MCP setup](adPTDocker/MCPUSAGE.md) |
-| [cloudPTDocker](cloudPTDocker/README.md) | Cloud and container configuration assessment | [Usage](cloudPTDocker/USAGE.md) | [MCP setup](cloudPTDocker/MCPUSAGE.md) |
+| webPTDocker | Web application pentesting | [Usage](webPTDocker/USAGE.md) | [MCP setup](webPTDocker/MCPUSAGE.md) |
+| mobilePTDocker | Android and iOS assessment | [Usage](mobilePTDocker/USAGE.md) | [MCP setup](mobilePTDocker/MCPUSAGE.md) |
+| reDocker | ELF and native binary analysis | [Usage](reDocker/USAGE.md) | [MCP setup](reDocker/MCPUSAGE.md) |
+| cryptDocker | Cryptographic implementation analysis | [Usage](cryptDocker/USAGE.md) | [MCP setup](cryptDocker/MCPUSAGE.md) |
+| OSINTDocker | Artifact and website reconnaissance, including REA | [Usage](OSINTDocker/USAGE.md) | [MCP setup](OSINTDocker/MCPUSAGE.md) |
+| networkPTDocker | Network enumeration and packet analysis | [Usage](networkPTDocker/USAGE.md) | [MCP setup](networkPTDocker/MCPUSAGE.md) |
+| adPTDocker | Windows and Active Directory assessment | [Usage](adPTDocker/USAGE.md) | [MCP setup](adPTDocker/MCPUSAGE.md) |
+| cloudPTDocker | Cloud and container configuration assessment | [Usage](cloudPTDocker/USAGE.md) | [MCP setup](cloudPTDocker/MCPUSAGE.md) |
 
 Start Docker Desktop or Docker Engine, choose an environment, and follow its
 command guide. Build from the repository root so Docker can access `shared/`.

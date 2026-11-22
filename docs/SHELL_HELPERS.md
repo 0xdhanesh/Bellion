@@ -126,7 +126,98 @@ dockermcphere() {
 reamcphere() {
     _securitydockerhere -i "$@" osintdocker:latest rea mcp
 }
+
+# Register an environment's MCP bridge with a client, mounting the current directory.
+# Usage: _bellionmcp CLIENT SERVER_NAME IMAGE
+_bellionmcp() {
+    local client="$1" name="$2" image="$3"
+    if ! command -v "$client" >/dev/null 2>&1; then
+        printf '%s\n' "$client CLI not found in PATH" >&2
+        return 127
+    fi
+    if ! docker image inspect "$image" >/dev/null 2>&1; then
+        printf '%s\n' "Image $image not found; build it first (see above)." >&2
+        return 1
+    fi
+    local -a launch=(docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges
+        --ulimit fsize=16777216:16777216
+        --mount "type=bind,src=$(pwd),dst=/workspace"
+        "$image" python3 /opt/security/mcp_server.py)
+    case "$client" in
+        claude)
+            claude mcp add --transport stdio --scope user "$name" -- "${launch[@]}" \
+                && claude mcp list && claude mcp get "$name" ;;
+        codex)
+            codex mcp add "$name" -- "${launch[@]}" \
+                && codex mcp list && codex mcp get "$name" ;;
+        grok)
+            grok mcp add --scope user "$name" -- "${launch[@]}" \
+                && grok mcp list && grok mcp doctor "$name" ;;
+        agy)
+            agy mcp add --type stdio "$name" -- "${launch[@]}" \
+                && agy mcp list ;;
+    esac
+}
+
+# Claude Code
+webptmcp-claude()     { _bellionmcp claude webPTDocker     webptdocker:latest; }
+mobptmcp-claude()     { _bellionmcp claude mobilePTDocker  mobileptdocker:latest; }
+remcp-claude()        { _bellionmcp claude reDocker        redocker:latest; }
+cryptmcp-claude()     { _bellionmcp claude cryptDocker     cryptdocker:latest; }
+osintmcp-claude()     { _bellionmcp claude OSINTDocker     osintdocker:latest; }
+netptmcp-claude()     { _bellionmcp claude networkPTDocker networkptdocker:latest; }
+adptmcp-claude()      { _bellionmcp claude adPTDocker      adptdocker:latest; }
+cloudptmcp-claude()   { _bellionmcp claude cloudPTDocker   cloudptdocker:latest; }
+
+# Codex
+webptmcp-codex()      { _bellionmcp codex webPTDocker     webptdocker:latest; }
+mobptmcp-codex()      { _bellionmcp codex mobilePTDocker  mobileptdocker:latest; }
+remcp-codex()         { _bellionmcp codex reDocker        redocker:latest; }
+cryptmcp-codex()      { _bellionmcp codex cryptDocker     cryptdocker:latest; }
+osintmcp-codex()      { _bellionmcp codex OSINTDocker     osintdocker:latest; }
+netptmcp-codex()      { _bellionmcp codex networkPTDocker networkptdocker:latest; }
+adptmcp-codex()       { _bellionmcp codex adPTDocker      adptdocker:latest; }
+cloudptmcp-codex()    { _bellionmcp codex cloudPTDocker   cloudptdocker:latest; }
+
+# Grok Build CLI
+webptmcp-grok()       { _bellionmcp grok webPTDocker     webptdocker:latest; }
+mobptmcp-grok()       { _bellionmcp grok mobilePTDocker  mobileptdocker:latest; }
+remcp-grok()          { _bellionmcp grok reDocker        redocker:latest; }
+cryptmcp-grok()       { _bellionmcp grok cryptDocker     cryptdocker:latest; }
+osintmcp-grok()       { _bellionmcp grok OSINTDocker     osintdocker:latest; }
+netptmcp-grok()       { _bellionmcp grok networkPTDocker networkptdocker:latest; }
+adptmcp-grok()        { _bellionmcp grok adPTDocker      adptdocker:latest; }
+cloudptmcp-grok()     { _bellionmcp grok cloudPTDocker   cloudptdocker:latest; }
+
+# Google Antigravity
+webptmcp-agy()        { _bellionmcp agy webPTDocker     webptdocker:latest; }
+mobptmcp-agy()        { _bellionmcp agy mobilePTDocker  mobileptdocker:latest; }
+remcp-agy()           { _bellionmcp agy reDocker        redocker:latest; }
+cryptmcp-agy()        { _bellionmcp agy cryptDocker     cryptdocker:latest; }
+osintmcp-agy()        { _bellionmcp agy OSINTDocker     osintdocker:latest; }
+netptmcp-agy()        { _bellionmcp agy networkPTDocker networkptdocker:latest; }
+adptmcp-agy()         { _bellionmcp agy adPTDocker      adptdocker:latest; }
+cloudptmcp-agy()      { _bellionmcp agy cloudPTDocker   cloudptdocker:latest; }
 ```
+
+### One-command MCP registration
+
+Each `<env>mcp-<client>` function registers that environment's MCP bridge with the
+client, mounting the **directory you run it from** as `/workspace`, then lists the
+registered servers and checks the new one (`mcp get` for Claude/Codex, `mcp doctor`
+for Grok). The prefixes are `webpt`, `mobpt`, `re`, `crypt`, `osint`, `netpt`,
+`adpt`, and `cloudpt`; the clients are `claude`, `codex`, `grok`, and `agy`.
+
+```bash
+cd ~/engagements/app1
+mobptmcp-claude      # mobilePTDocker -> Claude Code, mounting ~/engagements/app1
+adptmcp-grok         # adPTDocker -> Grok Build CLI, mounting the current folder
+```
+
+The mount path is recorded at registration time, so run the function from the folder
+you want the agent to see. Registering an existing name again fails; remove it with the
+client's `mcp remove` command first. These helpers need the image built and the client
+CLI in `PATH`, and they stop with a message if either is missing.
 
 Examples, run from the directory holding your artifacts:
 
