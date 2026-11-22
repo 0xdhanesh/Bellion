@@ -76,3 +76,8 @@ files, with a 16 MiB file-size limit in the supplied launch configurations.
 Ubuntu packages and Python dependencies resolve within their declared ranges at
 build time; these are maintained starter environments, not bit-for-bit locked
 images. Keep build logs or freeze package versions when reproducibility is needed.
+
+## Usage guides
+
+- [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
+- [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.
