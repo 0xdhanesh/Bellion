@@ -1,0 +1,21 @@
+{
+  "commands": [
+    "file",
+    "readelf",
+    "objdump",
+    "strings",
+    "nm",
+    "gdb",
+    "strace",
+    "ltrace",
+    "gcc",
+    "make",
+    "nasm",
+    "patchelf",
+    "eu-readelf",
+    "yara",
+    "pwn",
+    "checksec",
+    "python3"
+  ]
+}
