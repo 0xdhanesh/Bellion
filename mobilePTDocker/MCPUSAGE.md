@@ -1,8 +1,8 @@
 # mobilePTDocker: MCP usage
 
-Connect the **mobilePTDocker** image to Claude Code/Desktop, Codex, Grok Build CLI,
-or Google Antigravity (`agy`). Setup examples target local clients running on
-the same Docker host. Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
+- Connects the **mobilePTDocker** image to Claude Code/Desktop, Codex, Grok Build CLI, or Google Antigravity (`agy`).
+- Setup examples target local clients running on the same Docker host.
+- Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>
 
 ## 1. Prepare the image and workspace
 
@@ -15,19 +15,11 @@ docker info
 command -v docker
 ```
 
-Run the registration commands below from the directory you want mounted as
-`/workspace`: `$(pwd)` expands to that absolute host path. The client records
-that expanded path. JSON/TOML examples instead use a literal placeholder: replace
-`/ABSOLUTE/PATH/TO/workspace` yourself; do not rely on shell expansion in JSON.
-Use the Docker executable's absolute path if a GUI client's PATH cannot find it.
-Place your inputs in the host workspace before requesting analysis.
-
-The MCP client launches a new container with `docker run --rm -i`, **without
-`-t` or `-it`**. It starts `/opt/security/mcp_server.py` over stdin/stdout. There
-is no published MCP port, HTTP URL, or OAuth login for this local bridge. The
-Docker daemon and workspace must be reachable from the machine executing the
-MCP server command. Hosted chats cannot directly execute this local command;
-this repository does not supply a remote HTTP gateway.
+- Run the registration commands below from the directory you want mounted as `/workspace`; `$(pwd)` expands to it.
+- JSON/TOML configs need a literal absolute path instead (replace `/ABSOLUTE/PATH/TO/workspace`).
+- Use Docker's absolute path if a GUI client cannot find `docker` on its PATH.
+- The client launches `docker run --rm -i` (no `-t`) and talks to the server over stdin/stdout; there is no port, URL or login.
+- The Docker daemon and workspace must be reachable from the machine running the client; hosted chats cannot use this.
 
 ## 2. Claude Code
 
@@ -40,22 +32,13 @@ claude mcp list
 claude mcp get mobilePTDocker
 ```
 
-Start or restart Claude Code, then open `/mcp` to inspect the connection. The
-user scope applies across your projects; use `--scope project` instead if you
-want registration in the current project's `.mcp.json`. Keep existing servers
-when adding entries. See [Claude Code's MCP guide](https://code.claude.com/docs/en/mcp).
+Start or restart Claude Code, then open `/mcp` to inspect the connection.
 
 ### Claude Desktop
 
-Open Settings → Developer → Edit Config. Merge the matching server entry from
-[mcp.json](mcp.json) into the existing `mcpServers` map, replace the absolute
-workspace placeholder, save, and fully restart Claude Desktop. On macOS the
-file is `~/Library/Application Support/Claude/claude_desktop_config.json`;
-on Windows it is `%APPDATA%\Claude\claude_desktop_config.json`.
-See the [local MCP setup guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
-Do not replace unrelated configuration. With Windows Docker Desktop, use a
-host path valid for the environment launching `docker`; these shell examples
-are intended for Bash/Zsh or a configured WSL workflow.
+- Open Settings → Developer → Edit Config.
+- Merge the server entry from [mcp.json](mcp.json) into `mcpServers`, replace the workspace placeholder, save and restart Claude Desktop.
+- Config file: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows).
 
 ## 3. Codex CLI / local desktop or IDE client
 
@@ -69,35 +52,15 @@ codex mcp get mobilePTDocker
 ```
 
 Restart the local Codex session and use `/mcp` to inspect available tools.
-For explicit timeouts, edit this server's table in `~/.codex/config.toml`
-(or the trusted project's `.codex/config.toml`). This is an **alternative
-configuration of the same server**, not a second entry to append:
+For longer commands, add timeouts to this server's table in `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.mobilePTDocker]
-command = "docker"
-args = [
-  "run",
-  "--rm",
-  "-i",
-  "--cap-drop=ALL",
-  "--security-opt=no-new-privileges",
-  "--ulimit",
-  "fsize=16777216:16777216",
-  "--mount",
-  "type=bind,src=/ABSOLUTE/PATH/TO/workspace,dst=/workspace",
-  "mobileptdocker:latest",
-  "python3",
-  "/opt/security/mcp_server.py"
-]
 startup_timeout_sec = 30
 tool_timeout_sec = 330
 ```
 
-Replace the placeholder path. Codex uses TOML, so the JSON `mcpServers` object
-from `mcp.json` cannot be pasted directly into `config.toml`.
-See [OpenAI's MCP configuration guide](https://developers.openai.com/codex/mcp/).
-The client timeout is distinct from `run_tool.timeout` (maximum 300 seconds).
+`run_tool.timeout` is capped at 300 seconds, so keep the client timeout above it.
 
 ## 4. Grok Build CLI
 
@@ -112,11 +75,7 @@ grok mcp doctor mobilePTDocker
 ```
 
 Start a new Grok session and use `/mcps` to inspect or refresh the connection.
-User registration uses `~/.grok/config.toml`; `--scope project` writes the
-current project's `.grok/config.toml`. This server uses the same `command` and
-`args` structure as the Codex TOML example; a `tool_timeout_sec = 330` setting
-provides room for a 300-second bridge command. Do not overwrite other entries.
-See [Grok Build's MCP guide](https://docs.x.ai/build/features/mcp-servers).
+For longer commands set `tool_timeout_sec = 330` for this server in `~/.grok/config.toml`.
 
 ## 5. Google Antigravity (`agy`)
 
@@ -136,8 +95,7 @@ For JSON configuration, merge the server entry from [mcp.json](mcp.json) into
 `~/.gemini/config/mcp_config.json` or the workspace's `.agents/mcp_config.json`.
 Replace the bind-path placeholder and set `"timeoutSeconds": 330` in this
 server's object for long bridge calls. In the IDE, open MCP Servers → Manage MCP
-Servers → View raw config to edit the active file. Preserve existing entries,
-then reload the server/session. See [Antigravity's MCP guide](https://antigravity.google/docs/mcp).
+Servers → View raw config to edit the active file.
 
 ## 6. Check connectivity and make the first request
 
@@ -147,14 +105,9 @@ In any of these clients, ask:
 > executables, then run python3 with args ["-c", "print('MCP connected')"] in
 > /workspace with a 30-second timeout. Show the exit code and stdout.
 
-A successful check returns installation booleans from `list_tools` and
-`MCP connected` in the command output. `list_tools` is this bridge's inventory
-tool; it is separate from MCP's protocol-level tool discovery. Clients can
-prefix tool names with the server name, so select the tool belonging to
-`mobilePTDocker` when several bridges are connected.
+On successful connection we can see two tools: `list_tools` and `run_tool`.
 
-The bridge exposes only `list_tools` and `run_tool`. A concrete operation payload
-for `run_tool` is:
+Example `run_tool` payload:
 
 ```json
 {
@@ -167,12 +120,6 @@ for `run_tool` is:
   "timeout": 60
 }
 ```
-
-The tool result includes `exit_code`, `timed_out`, `stdout`, `stderr`,
-`stdout_truncated`, and `stderr_truncated`. Inspect all of them. A valid MCP
-response can contain a failed command. Invalid commands, cwd values, or timeout
-values instead produce a tool error. Output depends on your input/target;
-missing files, no matches, or unavailable services are not successful findings.
 
 ## 7. Ask for specific operations
 
