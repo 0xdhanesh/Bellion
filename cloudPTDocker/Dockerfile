@@ -2,7 +2,7 @@
 FROM ubuntu:24.04
 LABEL maintainer="0xdhanesh <dhanesh.professional@gmail.com>" \
       org.opencontainers.image.title="cloudPTDocker" \
-      org.opencontainers.image.description="Cloud and container configuration assessment"
+      org.opencontainers.image.description="Cloud configuration assessment"
 ENV DEBIAN_FRONTEND=noninteractive \
     PATH="/opt/venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
@@ -30,10 +30,8 @@ COPY cloudPTDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \
     && pip install --no-cache-dir -r /opt/security/mcp-requirements.txt -r /opt/security/requirements.txt
 ARG TARGETARCH
-COPY shared/install_release.py /opt/security/install_release.py
-COPY cloudPTDocker/releases.json cloudPTDocker/versions.json cloudPTDocker/gcloud-release.json /opt/security/
+COPY cloudPTDocker/versions.json cloudPTDocker/gcloud-release.json /opt/security/
 COPY cloudPTDocker/install_clis.py cloudPTDocker/install_gcloud.py /opt/security/
-RUN /usr/bin/python3 /opt/security/install_release.py /opt/security/releases.json "$TARGETARCH"
 RUN /usr/bin/python3 /opt/security/install_gcloud.py "$TARGETARCH"
 RUN /usr/bin/python3 /opt/security/install_clis.py
 ENV CLOUDSDK_PYTHON=/usr/bin/python3 \

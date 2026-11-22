@@ -111,7 +111,7 @@ Example `run_tool` payload:
 
 ```json
 {
-  "command": "trivy",
+  "command": "aws",
   "args": [
     "--version"
   ],
@@ -124,10 +124,6 @@ Example `run_tool` payload:
 
 State the target/input, allowed scope, output path, and time limit. For example:
 
-### Offline IaC review
-
-> Use cloudPTDocker to scan only /workspace/iac for Dockerfile, Terraform and Kubernetes misconfigurations with Trivy. Use bundled checks without downloading updates and save JSON to /workspace/iac-report.json. Report severity, file/line evidence, and coverage; do not apply changes or contact a cloud account.
-
 ### AWS identity and inventory
 
 > Using only the credentials explicitly configured for cloudPTDocker, report the AWS caller identity, then list EC2 instances in authorized REGION. Save JSON under /workspace/results. Do not assume roles, visit other accounts/regions, or modify resources. Report denied API calls precisely.
@@ -139,10 +135,6 @@ State the target/input, allowed scope, output path, and time limit. For example:
 ### Google Cloud inventory
 
 > Use the configured gcloud identity in cloudPTDocker to list compute instances only in PROJECT_ID. Save JSON to /workspace/gcp-instances.json. Report permission errors and pagination/coverage; do not enable APIs or change resources.
-
-### Image archive review
-
-> Scan /workspace/image.tar with Trivy in cloudPTDocker using the approved existing cache at /workspace/trivy-cache without updating vulnerability databases. Save JSON to /workspace/image-report.json. If the required database is missing, report that prerequisite rather than claiming a clean scan.
 
 ## 8. Files, argument arrays, and limits
 
@@ -180,7 +172,7 @@ Detached services cannot be kept running across bridge calls. Each output stream
 is capped at 64 KiB; save larger output under `/workspace`. Supplied launch args
 also cap individual files at 16 MiB; adjust `fsize` deliberately if needed.
 
-Cloud identities, account permissions, and provider connectivity are external prerequisites. No credentials are embedded. AWS CLI v1 is included (not v2 SSO login). Azure and Google Cloud interactive logins belong in a shell with separately mounted persistent configuration directories, which must also be added to the MCP Docker args. Vulnerability databases are not bundled; Trivy configuration scans can use embedded checks offline, while vulnerability scans need an available database. No Kubernetes client, VPN, or automatic cloud remediation is included.
+Cloud identities, account permissions, and provider connectivity are external prerequisites. No credentials are embedded. AWS CLI v1 is included (not v2 SSO login). Azure and Google Cloud interactive logins belong in a shell with separately mounted persistent configuration directories, which must also be added to the MCP Docker args. No Kubernetes client, VPN, or automatic cloud remediation is included.
 
 MCP access permits code execution inside the container, including interpreter
 and debugger scripting. Use trusted clients and mount only needed artifacts.

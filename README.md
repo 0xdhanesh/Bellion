@@ -9,23 +9,28 @@ Includes MCP integration for Claude, Codex, Grok CLI, and Google Antigravity.
 | Environment | Purpose | Command guide | MCP guide |
 | --- | --- | --- | --- |
 | webPTDocker | Web application pentesting | [Usage](webPTDocker/USAGE.md) | [MCP setup](webPTDocker/MCPUSAGE.md) |
-| mobilePTDocker | Android and iOS assessment | [Usage](mobilePTDocker/USAGE.md) | [MCP setup](mobilePTDocker/MCPUSAGE.md) |
-| reDocker | ELF and native binary analysis | [Usage](reDocker/USAGE.md) | [MCP setup](reDocker/MCPUSAGE.md) |
+| mobilePTDocker | Android and iOS assessment, with REA, JADX, Ghidra and Frida server | [Usage](mobilePTDocker/USAGE.md) | [MCP setup](mobilePTDocker/MCPUSAGE.md) |
+| reDocker | ELF and native binary analysis, with REA, Ghidra and Rizin | [Usage](reDocker/USAGE.md) | [MCP setup](reDocker/MCPUSAGE.md) |
 | cryptDocker | Cryptographic implementation analysis | [Usage](cryptDocker/USAGE.md) | [MCP setup](cryptDocker/MCPUSAGE.md) |
 | OSINTDocker | Artifact and website reconnaissance, including REA | [Usage](OSINTDocker/USAGE.md) | [MCP setup](OSINTDocker/MCPUSAGE.md) |
 | networkPTDocker | Network enumeration and packet analysis | [Usage](networkPTDocker/USAGE.md) | [MCP setup](networkPTDocker/MCPUSAGE.md) |
 | adPTDocker | Windows and Active Directory assessment | [Usage](adPTDocker/USAGE.md) | [MCP setup](adPTDocker/MCPUSAGE.md) |
-| cloudPTDocker | Cloud and container configuration assessment | [Usage](cloudPTDocker/USAGE.md) | [MCP setup](cloudPTDocker/MCPUSAGE.md) |
+| cloudPTDocker | Cloud configuration assessment | [Usage](cloudPTDocker/USAGE.md) | [MCP setup](cloudPTDocker/MCPUSAGE.md) |
 
 Start Docker Desktop or Docker Engine, choose an environment, and follow its
 command guide. Build from the repository root so Docker can access `shared/`.
+Each image is self-contained: every engine, wordlist, database and runtime its
+tools need is downloaded at build time (release artifacts are SHA-256 pinned) and
+configured through `ENV` in its Dockerfile. At run time the host supplies only
+Docker, the mounted workspace and, if you choose, an MCP client.
 Each environment's documentation covers tools, expected outputs, and limitations.
 
 ## Quick shell access
 
 After building an image, add these Bash/Zsh helpers to `~/.bashrc` or `~/.zshrc`
 and source that file. They use the image's `0xdhanesh` account and the project's
-capability and file-size defaults.
+capability and file-size defaults (mobilePTDocker and reDocker raise the file
+cap to 2 GiB for Ghidra and JADX workspaces; see the full helper guide).
 
 ```bash
 dockershell() {

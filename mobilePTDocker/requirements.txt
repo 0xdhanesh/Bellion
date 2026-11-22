@@ -1,2 +1,4 @@
 androguard>=4.1,<5
+# Matches the frida-server/gadget binaries in /opt/frida and REA's Frida 17.23.2 bindings.
+frida==17.23.2
 frida-tools>=14,<15

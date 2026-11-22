@@ -55,6 +55,12 @@ If you encounter a bug or have a feature request:
 - Clean up package manager caches (`rm -rf /var/lib/apt/lists/*`)
 - Maintain alphabetical order for installed packages
 - Use specific package versions when stability is critical
+- Keep every image self-contained: anything a tool needs at run time (engines,
+  JARs, runtimes, native libraries) is fetched at build time and
+  located through `ENV`, never through a host path or a first-run download
+- Pin release downloads with their SHA-256 in a manifest installed by
+  `shared/install_artifacts.py` (or `shared/install_release.py` for projects that
+  publish checksum files), and prefer releases at least two weeks old
 
 ### Documentation
 

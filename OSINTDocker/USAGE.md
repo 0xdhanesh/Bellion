@@ -119,13 +119,13 @@ rea --help
 rea mcp
 ```
 
-For APKs use apktool/Androguard for the bundled offline workflow. REA archive
-inspection can inventory APK/IPA members; native decompilation and deep Android
-code analysis need their optional external engines. Ghidra, IDA, Hopper, JADX,
-and a browser/CDP endpoint are not bundled. REA's CLI exposes many provider-
-dependent commands; inspect a subcommand with `rea COMMAND --help` before use.
-The [REA provider documentation](https://github.com/morluto/rea/blob/main/docs/getting-started/installation.md)
-covers those additional prerequisites. A URL is not an extracted JavaScript tree.
+For APKs, apktool/Androguard and REA's Android code analysis both work offline:
+the jadx-headless-mcp JAR REA needs is bundled and preconfigured
+(`rea doctor --provider jadx` reports it healthy). No browser is bundled, so REA
+browser workflows are unavailable. Native decompilation with
+Ghidra is bundled in mobilePTDocker and reDocker instead. IDA, Hopper, JEB and
+Kuna are proprietary and not bundled. Inspect a subcommand with
+`rea COMMAND --help` before use. A URL is not an extracted JavaScript tree.
 
 DNS/WHOIS queries contact resolvers or registration services. HTTP, TLS probes,
 and nmap contact the target directly. Limit active recon to an authorized scope.

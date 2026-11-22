@@ -42,6 +42,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends procps \
     && rm -rf /var/lib/apt/lists/*
 ARG REA_VERSION=6.10.1
 RUN npm install --global "rea-agents@${REA_VERSION}" && npm cache clean --force
+ARG TARGETARCH
+COPY shared/install_artifacts.py /opt/security/install_artifacts.py
+COPY shared/rea/jadx-mcp.json /opt/security/rea-jadx-mcp.json
+RUN python3 /opt/security/install_artifacts.py /opt/security/rea-jadx-mcp.json "$TARGETARCH"
+# REA engine locations live in the image, so neither the shell nor MCP needs host paths.
+ENV REA_JADX_MCP_JAR=/opt/rea-engines/jadx/jadx-headless-mcp-0.7.1-all.jar
 COPY shared/requirements.txt /opt/security/mcp-requirements.txt
 COPY OSINTDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \

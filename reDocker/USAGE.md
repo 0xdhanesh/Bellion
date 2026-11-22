@@ -27,20 +27,20 @@ On the host, from the repository root:
 ```bash
 # Interactive Bash shell; the mounted folder becomes /workspace.
 docker run --rm -it --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/reDocker/workspace,dst=/workspace" \
   redocker:latest
 
 # Alternative: /bin/sh instead of Bash.
 docker run --rm -it --entrypoint=/bin/sh \
   --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/reDocker/workspace,dst=/workspace" \
   redocker:latest
 
 # One command, without a TTY or a persistent shell.
 docker run --rm --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/reDocker/workspace,dst=/workspace" \
   redocker:latest python3 -c 'print("container ready")'
 
@@ -59,7 +59,7 @@ workspace access or add `--user "$(id -u):$(id -g)" -e HOME=/tmp` before the ima
 in `docker run`. For offline artifact work, add `--network=none` there as well.
 Compose overrides must supply equivalent settings. For a foreign architecture,
 use matching `--platform linux/amd64` build/run options; emulated execution and
-ptrace are not guaranteed. The supplied launches cap individual files at 16 MiB;
+ptrace are not guaranteed. The supplied launches cap individual files at 2 GiB (Ghidra and JADX workspaces outgrow 16 MiB);
 raise the `--ulimit fsize=SOFT:HARD` values deliberately for larger reports.
 
 ## 3. Execute the installed commands
@@ -98,7 +98,7 @@ Run this **on the host**, from the repository root, only when debugging is neede
 ```bash
 docker run --rm -it --cap-drop=ALL --cap-add=SYS_PTRACE \
   --security-opt=no-new-privileges --security-opt=seccomp=unconfined \
-  --ulimit fsize=16777216:16777216 --network=none \
+  --ulimit fsize=2147483648:2147483648 --network=none \
   --mount "type=bind,src=$PWD/reDocker/workspace,dst=/workspace" \
   redocker:latest
 ```
@@ -124,7 +124,19 @@ A debugger or trace can execute arbitrary target behavior. Native execution need
 matching architecture and kernel support. For x86-64 tools on an ARM host, build
 and run with `--platform linux/amd64`; emulation still may not support ptrace.
 Static inspection does not need these debug permissions. The image has no
-bundled GUI decompiler and does not recover original source automatically.
+GUI decompiler; Ghidra 12.2 runs headless and recovered pseudocode is not original source.
+
+### Bundled REA engines
+
+Ghidra, Rizin, WABT, GDB and the pwntools profile REA verifies are preconfigured
+through image environment variables; no host install or path setting is needed:
+
+```bash
+rea doctor --provider ghidra
+analyzeHeadless /workspace/ghidra-project sample -import /workspace/sample
+rizin -A -qc 'afl' /workspace/sample
+wasm-objdump -x /workspace/module.wasm
+```
 
 ### Python analysis libraries
 

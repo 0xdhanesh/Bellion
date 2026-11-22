@@ -144,8 +144,9 @@ This is an extra Docker argument, not a standalone shell command. In JSON/TOML,
 replace `$PWD` with an absolute path. The host state folder must be writable by
 UID 10001 (or the runtime user override).
 
-The container does not bundle a GPU runtime, wordlists, SageMath, or a guarantee
-of an OpenCL backend. No matches and unsupported-device errors are valid
+The container bundles PoCL, a CPU OpenCL backend for hashcat. It does not bundle
+wordlists, a GPU runtime or SageMath; CPU cracking is
+much slower than GPU cracking. No matches and unsupported-device errors are valid
 outcomes. A successful test vector does not prove an implementation secure.
 
 ## 4. Preserve results and verify the environment

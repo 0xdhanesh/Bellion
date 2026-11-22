@@ -29,6 +29,10 @@ _securitydockerhere() {
         --workdir /workspace "$@"
 }
 
+# Ghidra projects and JADX caches outgrow 16 MiB files; the Docker CLI applies the
+# last --ulimit given, so this raises the cap for mobilePTDocker and reDocker only.
+_bellionlarge=(--ulimit fsize=2147483648:2147483648)
+
 # Generic shells: Docker options go before the image; shell arguments after it.
 dockershell() {
     _securitydocker -it --entrypoint=/bin/bash "$@"
@@ -52,11 +56,11 @@ webpthere() {
 }
 
 mobilepthere() {
-    dockershellhere mobileptdocker:latest "$@"
+    dockershellhere "${_bellionlarge[@]}" mobileptdocker:latest "$@"
 }
 
 rehere() {
-    dockershellhere redocker:latest "$@"
+    dockershellhere "${_bellionlarge[@]}" redocker:latest "$@"
 }
 
 crypthere() {
@@ -88,17 +92,35 @@ apktoolhere() {
     _securitydockerhere -it mobileptdocker:latest apktool "$@"
 }
 
+jadxhere() {
+    _securitydockerhere -it "${_bellionlarge[@]}" mobileptdocker:latest jadx "$@"
+}
+
 gdbhere() {
     _securitydockerhere -it --cap-add=SYS_PTRACE \
         --security-opt=seccomp=unconfined redocker:latest gdb "$@"
+}
+
+rizinhere() {
+    _securitydockerhere -it "${_bellionlarge[@]}" redocker:latest rizin "$@"
 }
 
 opensslhere() {
     _securitydockerhere -it cryptdocker:latest openssl "$@"
 }
 
+# REA CLI with each image's bundled engines: OSINT (JADX),
+# mobile (JADX, Ghidra), RE (Ghidra, Rizin, WABT, GDB, pwntools).
 reahere() {
     _securitydockerhere -it osintdocker:latest rea "$@"
+}
+
+reamobilehere() {
+    _securitydockerhere -it "${_bellionlarge[@]}" mobileptdocker:latest rea "$@"
+}
+
+rearehere() {
+    _securitydockerhere -it "${_bellionlarge[@]}" redocker:latest rea "$@"
 }
 
 exiftoolhere() {
@@ -122,15 +144,22 @@ dockermcphere() {
     _securitydockerhere -i "$@" "$image" python3 /opt/security/mcp_server.py
 }
 
-# Independent REA MCP server, also without a TTY.
+# Independent REA MCP server, also without a TTY. Optional IMAGE selects which
+# image's bundled engines REA uses (default osintdocker:latest).
 reamcphere() {
-    _securitydockerhere -i "$@" osintdocker:latest rea mcp
+    local image="${1:-osintdocker:latest}"
+    [ "$#" -gt 0 ] && shift
+    case "$image" in
+        mobileptdocker:*|redocker:*) _securitydockerhere -i "${_bellionlarge[@]}" "$@" "$image" rea mcp ;;
+        *) _securitydockerhere -i "$@" "$image" rea mcp ;;
+    esac
 }
 
-# Register an environment's MCP bridge with a client, mounting the current directory.
-# Usage: _bellionmcp CLIENT SERVER_NAME IMAGE
+# Register an environment's MCP bridge (or, with MODE rea, its native REA server)
+# with a client, mounting the current directory.
+# Usage: _bellionmcp CLIENT SERVER_NAME IMAGE [bridge|rea]
 _bellionmcp() {
-    local client="$1" name="$2" image="$3"
+    local client="$1" name="$2" image="$3" mode="${4:-bridge}"
     if ! command -v "$client" >/dev/null 2>&1; then
         printf '%s\n' "$client CLI not found in PATH" >&2
         return 127
@@ -139,10 +168,14 @@ _bellionmcp() {
         printf '%s\n' "Image $image not found; build it first (see above)." >&2
         return 1
     fi
+    local fsize=16777216
+    case "$image" in mobileptdocker:*|redocker:*) fsize=2147483648 ;; esac
+    local -a server=(python3 /opt/security/mcp_server.py)
+    [ "$mode" = rea ] && server=(rea mcp)
     local -a launch=(docker run --rm -i --cap-drop=ALL --security-opt=no-new-privileges
-        --ulimit fsize=16777216:16777216
+        --ulimit "fsize=$fsize:$fsize"
         --mount "type=bind,src=$(pwd),dst=/workspace"
-        "$image" python3 /opt/security/mcp_server.py)
+        "$image" "${server[@]}")
     case "$client" in
         claude)
             claude mcp add --transport stdio --scope user "$name" -- "${launch[@]}" \
@@ -198,6 +231,14 @@ osintmcp-agy()        { _bellionmcp agy OSINTDocker     osintdocker:latest; }
 netptmcp-agy()        { _bellionmcp agy networkPTDocker networkptdocker:latest; }
 adptmcp-agy()         { _bellionmcp agy adPTDocker      adptdocker:latest; }
 cloudptmcp-agy()      { _bellionmcp agy cloudPTDocker   cloudptdocker:latest; }
+
+# Native REA servers, one per image that bundles REA engines.
+for _client in claude codex grok agy; do
+    eval "osintreamcp-$_client() { _bellionmcp $_client osint-rea  osintdocker:latest    rea; }"
+    eval "mobreamcp-$_client()   { _bellionmcp $_client mobile-rea mobileptdocker:latest rea; }"
+    eval "rereamcp-$_client()    { _bellionmcp $_client re-rea     redocker:latest       rea; }"
+done
+unset _client
 ```
 
 ### One-command MCP registration
@@ -207,6 +248,9 @@ client, mounting the **directory you run it from** as `/workspace`, then lists t
 registered servers and checks the new one (`mcp get` for Claude/Codex, `mcp doctor`
 for Grok). The prefixes are `webpt`, `mobpt`, `re`, `crypt`, `osint`, `netpt`,
 `adpt`, and `cloudpt`; the clients are `claude`, `codex`, `grok`, and `agy`.
+`osintreamcp-<client>`, `mobreamcp-<client>` and `rereamcp-<client>` register the
+native REA server of that image as `osint-rea`, `mobile-rea` or `re-rea`; each
+uses only the engines bundled in its image.
 
 ```bash
 cd ~/engagements/app1
@@ -237,6 +281,9 @@ apktoolhere d /workspace/app.apk -o /workspace/decoded
 gdbhere /workspace/sample
 opensslhere dgst -sha256 /workspace/sample
 reahere analyze-javascript-application /workspace/extracted-app --json
+reamobilehere doctor --provider jadx --provider ghidra
+jadxhere -d /workspace/jadx-out /workspace/app.apk
+rizinhere -A /workspace/sample
 exiftoolhere /workspace/document.pdf
 httphere                               # Visit http://127.0.0.1:8000; Ctrl-C to stop
 ```
@@ -250,7 +297,7 @@ WebDAV, SMB, or request-body uploads. The Windows-context, Impacket, Metasploit,
 and specialized serving shortcuts from the original snippet depend on images
 outside this project and are replaced here by the available shells and tools.
 
-`dockermcphere webptdocker:latest --network=none` and `reamcphere` are stdio MCP
+`dockermcphere webptdocker:latest --network=none` and `reamcphere [IMAGE]` are stdio MCP
 launchers, not interactive shells. They wait for MCP protocol messages. For an
 MCP client that launches a shell, source your helper file explicitly and change
 to the intended host workspace before invoking one. Clients that execute

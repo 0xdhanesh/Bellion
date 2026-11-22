@@ -18,6 +18,7 @@
     "openssl",
     "rg",
     "jq",
+    "java",
     "python3"
   ]
 }

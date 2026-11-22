@@ -87,7 +87,7 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 
 ### ProjectDiscovery discovery and checks
 
-These commands run inside the container. Supply your authorized scope, target
+These commands run inside the container. Supply your authorized scope and target
 lists, and wordlists. The image pins binaries in [releases.json](releases.json).
 ProjectDiscovery HTTPX is installed as `httpx-pd` to distinguish it from Python's
 unrelated `httpx` executable.
@@ -151,7 +151,7 @@ print([a.get('href') for a in page.find_all('a')])
 PYCODE
 ```
 
-Wordlists, Burp Suite, and a GUI browser are not bundled. Treat discovery hits
+Wordlists, Burp Suite, and a browser are not bundled. Treat discovery hits
 and scanner output as evidence to review, rather than proof of a vulnerability.
 
 ## 4. Preserve results and verify the environment

@@ -27,20 +27,20 @@ On the host, from the repository root:
 ```bash
 # Interactive Bash shell; the mounted folder becomes /workspace.
 docker run --rm -it --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/mobilePTDocker/workspace,dst=/workspace" \
   mobileptdocker:latest
 
 # Alternative: /bin/sh instead of Bash.
 docker run --rm -it --entrypoint=/bin/sh \
   --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/mobilePTDocker/workspace,dst=/workspace" \
   mobileptdocker:latest
 
 # One command, without a TTY or a persistent shell.
 docker run --rm --cap-drop=ALL --security-opt=no-new-privileges \
-  --ulimit fsize=16777216:16777216 \
+  --ulimit fsize=2147483648:2147483648 \
   --mount "type=bind,src=$PWD/mobilePTDocker/workspace,dst=/workspace" \
   mobileptdocker:latest python3 -c 'print("container ready")'
 
@@ -59,7 +59,7 @@ workspace access or add `--user "$(id -u):$(id -g)" -e HOME=/tmp` before the ima
 in `docker run`. For offline artifact work, add `--network=none` there as well.
 Compose overrides must supply equivalent settings. For a foreign architecture,
 use matching `--platform linux/amd64` build/run options; emulated execution and
-ptrace are not guaranteed. The supplied launches cap individual files at 16 MiB;
+ptrace are not guaranteed. The supplied launches cap individual files at 2 GiB (Ghidra and JADX workspaces outgrow 16 MiB);
 raise the `--ulimit fsize=SOFT:HARD` values deliberately for larger reports.
 
 ## 3. Execute the installed commands
@@ -106,7 +106,9 @@ Android wireless debugging can instead require `adb pair DEVICE_IP:PAIRING_PORT`
 and `adb connect DEVICE_IP:CONNECTION_PORT`. Device operations require a trusted
 connection. To install your test APK deliberately, use
 `adb -s DEVICE_SERIAL install /workspace/app.apk`; this changes the device.
-For Frida, supply a matching server/Gadget and an appropriate device configuration.
+For Frida, the matching 17.23.2 server and Gadget for each Android ABI are in
+`$FRIDA_SERVER_DIR` (`/opt/frida/android`); push the one for the device ABI with
+`adb push "$FRIDA_SERVER_DIR/frida-server-17.23.2-android-arm64" /data/local/tmp/frida-server`.
 `PID`, `DEVICE_SERIAL`, and `DEVICE_IP` are placeholders.
 
 To reuse a host ADB server, add
@@ -122,6 +124,18 @@ the host launch command. The container user must have socket access. Unlock and
 trust the device. `idevicepair -u UDID pair` explicitly establishes pairing;
 `validate` checks it. USB through Docker Desktop on macOS is not equivalent to
 native Linux: use host-side device tools there, or use offline APK/IPA analysis.
+
+### Decompilation and REA
+
+JADX, Ghidra and REA's engines are bundled and preconfigured; no host install or
+path setting is needed:
+
+```bash
+jadx -d /workspace/jadx-out /workspace/app.apk
+rea doctor --provider jadx --provider ghidra
+analyzeHeadless /workspace/ghidra-project lib -import /workspace/decoded/lib/arm64-v8a/libnative.so
+apksigner verify --print-certs /workspace/app.apk
+```
 
 No emulator, Xcode, iOS Simulator, or Apple code-signing environment is bundled.
 Encrypted IPA code must be legitimately decrypted before meaningful code review.

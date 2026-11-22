@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     hashcat \
     john \
     jq \
+    ocl-icd-libopencl1 \
     openssl \
+    pocl-opencl-icd \
     python3 \
     python3-pip \
     python3-venv \
@@ -26,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     wget \
     && rm -rf /var/lib/apt/lists/*
+# hashcat needs an OpenCL runtime; PoCL provides a CPU backend so it runs without a GPU.
 COPY shared/requirements.txt /opt/security/mcp-requirements.txt
 COPY cryptDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \

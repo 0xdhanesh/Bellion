@@ -1,6 +1,5 @@
 {
   "awscli": "1.46.3",
   "azure-cli": "2.93.0",
-  "google-cloud-cli": "594.0.0",
-  "trivy": "v0.76.2"
+  "google-cloud-cli": "594.0.0"
 }
