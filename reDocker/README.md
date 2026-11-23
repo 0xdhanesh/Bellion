@@ -4,9 +4,9 @@ ELF and native binary reverse engineering. Maintainer: **0xdhanesh** <dhanesh.pr
 
 ## Included tools
 
-Executables: `rea`, `analyzeHeadless` (Ghidra), `rizin`, `rz-bin`, `wasm-objdump`, `wasm2wat`, `wasm-validate`, `file`, `readelf`, `objdump`, `strings`, `nm`, `gdb`, `strace`, `ltrace`, `gcc`, `make`, `nasm`, `patchelf`, `eu-readelf`, `yara`, `pwn`, `checksec`, `java`, `python3`.
+Executables: `rea`, `analyzeHeadless` (Ghidra), `rizin`, `rz-bin`, `wasm-objdump`, `wasm2wat`, `wasm-validate`, `file`, `readelf`, `objdump`, `strings`, `nm`, `gdb`, `strace`, `ltrace`, `gcc`, `make`, `nasm`, `patchelf`, `eu-readelf`, `yara`, `pwn`, `checksec` (from pwntools), `ROPgadget`, `java`, `python3`.
 
-Python libraries/packages: `capstone>=5,<6`, `lief>=0.16,<1`, `pefile>=2024.8.26`, `pwntools==4.15.0`, `pyelftools==0.33`, `unicorn==2.1.2`.
+Python libraries/packages: `capstone>=5,<6`, `lief>=0.16,<1`, `pefile>=2024.8.26`, `pwntools==4.15.0`, `pyelftools==0.33`, `unicorn==2.1.2`, `ROPGadget==7.7`.
 
 Everything a tool needs ships in the image; see [Bundled engines](#bundled-engines). Nothing is read from the host except the mounted workspace.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).

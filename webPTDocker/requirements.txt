@@ -1,3 +1,9 @@
 beautifulsoup4>=4.12,<5
 mitmproxy>=11,<13
 requests>=2.32,<3
+arjun==2.2.7
+# jwt_tool 2.3.0 runtime dependencies (installed from a SHA-256 pinned release in the Dockerfile).
+termcolor>=2,<4
+cprint>=1,<2
+pycryptodomex>=3.20,<4
+ratelimit>=2.2,<3

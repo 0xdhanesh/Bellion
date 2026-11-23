@@ -91,6 +91,13 @@ Use its help for all options. Report files under `/workspace` persist on the hos
 | `whois` | `whois example.com` | Available registration records, with possible redactions. |
 | `jq` | `jq . /workspace/report.json` | Formatted JSON or a parsing error. |
 | `python3` | `python3 -c 'import socket; print(socket.getaddrinfo("example.com",443))'` | Resolved address candidates. |
+| `masscan` | `masscan 192.0.2.0/24 -p80,443 --rate 1000` | Open-port records; needs raw sockets (root with `NET_RAW`). |
+| `arp-scan` | `arp-scan --localnet` | Layer-2 host list; needs `NET_RAW` and a real interface. |
+| `proxychains4` | `proxychains4 -f /workspace/proxychains.conf nmap -sT -Pn TARGET` | Command output routed through the configured proxy chain. |
+| `chisel` | `chisel server --reverse --port 8000` | Tunnel server banner and session logs. |
+| `ligolo-proxy` | `ligolo-proxy -selfcert -laddr 0.0.0.0:11601` | Ligolo-ng console awaiting agents. |
+| `ligolo-agent` | `ligolo-agent -connect PROXY_HOST:11601 -ignore-cert` | Agent connection log. |
+| `responder` | `responder -I eth0 -A` | Analyze-mode LLMNR/NBT-NS/MDNS requests; requires root, `NET_RAW`, `NET_BIND_SERVICE` and usually host networking. |
 
 ### Captures, routing, and portability
 

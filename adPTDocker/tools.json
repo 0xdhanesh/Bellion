@@ -19,6 +19,14 @@
     "openssl",
     "curl",
     "jq",
+    "secretsdump.py",
+    "ntlmrelayx.py",
+    "GetNPUsers.py",
+    "ticketer.py",
+    "certipy",
+    "bloodhound-python",
+    "kerbrute",
+    "evil-winrm",
     "python3"
   ]
 }

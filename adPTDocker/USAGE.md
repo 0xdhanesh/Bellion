@@ -90,6 +90,14 @@ Use its help for all options. Report files under `/workspace` persist on the hos
 | `curl` | `curl -I --max-time 15 https://LAB_HOST` | HTTP headers for a supplied lab service. |
 | `jq` | `jq . /workspace/report.json` | Formatted JSON or a parsing error. |
 | `python3` | `python3 -c 'import impacket,ldap3; print(ldap3.__version__)'` | Checks the Impacket/LDAP Python environment. |
+| `secretsdump.py` | `secretsdump.py -k -no-pass LAB.EXAMPLE/0xdhanesh@DC_FQDN` | Credential-dump output for an account you are authorized to use; usage text with `-h`. |
+| `ntlmrelayx.py` | `ntlmrelayx.py -tf /workspace/targets.txt -smb2support` | Relay listener status; needs ports 445/80 (root with `NET_BIND_SERVICE`) for live relaying. |
+| `GetNPUsers.py` | `GetNPUsers.py -dc-ip DC_IP -usersfile /workspace/users.txt LAB.EXAMPLE/` | AS-REP-roastable accounts and hashes. |
+| `ticketer.py` | `ticketer.py -nthash HASH -domain-sid SID -domain LAB.EXAMPLE USER` | A forged ticket `.ccache` written to the working directory. |
+| `certipy` | `certipy find -u 0xdhanesh@lab.example -k -no-pass -dc-ip DC_IP -stdout` | ADCS templates, CAs and vulnerable-configuration findings. |
+| `bloodhound-python` | `bloodhound-python -c All -d lab.example -u 0xdhanesh -k -no-pass -ns DC_IP --zip` | BloodHound collection ZIP in the working directory. |
+| `kerbrute` | `kerbrute userenum -d lab.example --dc DC_IP /workspace/users.txt` | Valid usernames via Kerberos pre-auth responses. |
+| `evil-winrm` | `evil-winrm -i SERVER_FQDN -u 0xdhanesh -r LAB.EXAMPLE` | Interactive WinRM shell (needs port 5985/5986 reachability). |
 
 ### Configure DNS, time, and Kerberos
 

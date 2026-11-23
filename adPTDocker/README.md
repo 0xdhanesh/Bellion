@@ -5,7 +5,7 @@ Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
 
 ## Included tools
 
-`GetADUsers.py`, `GetUserSPNs.py`, `findDelegation.py`, `smbclient.py`, `rpcdump.py`, `lookupsid.py`, `mssqlclient.py`, `kinit`, `klist`, `kvno`, `ldapsearch`, `smbclient`, `rpcclient`, `dig`, `host`, `nslookup`, `openssl`, `curl`, `jq`, `python3`.
+`GetADUsers.py`, `GetUserSPNs.py`, `findDelegation.py`, `smbclient.py`, `rpcdump.py`, `lookupsid.py`, `mssqlclient.py`, `kinit`, `klist`, `kvno`, `ldapsearch`, `smbclient`, `rpcclient`, `dig`, `host`, `nslookup`, `openssl`, `curl`, `jq`, `secretsdump.py`, `ntlmrelayx.py`, `GetNPUsers.py`, `ticketer.py`, `certipy`, `bloodhound-python`, `kerbrute`, `evil-winrm`, `python3`.
 
 ## Build and spawn
 
@@ -41,3 +41,5 @@ needed files. There is no HTTP MCP endpoint or host Docker-socket mount.
 This is a Linux client toolkit, not a Windows/AD lab. Domain DNS, VPN reachability, clock synchronization and a valid authorized credential or Kerberos ticket are external prerequisites. MCP has no interactive password input: add -e KRB5_CONFIG=/workspace/krb5.conf and -e KRB5CCNAME=FILE:/workspace/0xdhanesh.ccache before the image in its Docker args for mounted lab configuration/cache. Interactive SMB/SQL sessions belong in the shell. No NetExec or BloodHound deployment is included.
 
 Use `./scripts/verify.sh adPTDocker` to build and run the offline MCP/tool checks.
+
+`kerbrute` is built from the pinned `v1.0.3` source tag (upstream ships no arm64 binary) and `evil-winrm` is installed as the pinned `4.1` Ruby gem.

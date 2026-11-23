@@ -90,6 +90,7 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `pwn` | `pwn checksec /workspace/sample` | ELF mitigation summary through pwntools. |
 | `checksec` | `checksec /workspace/sample` | Reported RELRO, stack-canary, NX, PIE, and related properties. |
 | `python3` | `python3 -c 'import lief; b=lief.parse("/workspace/sample"); print(b.header)'` | Parsed binary header using LIEF. |
+| `ROPgadget` | `ROPgadget --binary ./sample --only 'pop|ret'` | Gadget addresses and instructions. |
 
 ### Debugging with ptrace
 

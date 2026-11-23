@@ -92,6 +92,12 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `rg` | `rg -n -i "https?://" /workspace/decoded-apk > /workspace/url-candidates.txt` | Literal URL candidates from decoded files, not confirmed live endpoints. |
 | `jq` | `jq . /workspace/metadata.json` | Formatted JSON or a parse error. |
 | `python3` | `python3 -c 'import dns.resolver; print([str(r) for r in dns.resolver.resolve("example.com", "A")])'` | DNS answers through dnspython. |
+| `sherlock` | `sherlock USERNAME --timeout 10` | Sites where the username exists. |
+| `maigret` | `maigret USERNAME` | Profile matches and optional report files. |
+| `theHarvester` | `theHarvester -d example.com -b duckduckgo` | Emails, hosts and subdomains from public sources. |
+| `subfinder` | `subfinder -d example.com -silent` | Passive subdomain list. |
+| `dnsx` | `dnsx -l /workspace/subs.txt -resp` | Resolved records for each host. |
+| `httpx-pd` | `httpx-pd -l /workspace/subs.txt -sc -title` | Live web hosts with status code and title. |
 
 ### Combine artifact metadata and local search
 

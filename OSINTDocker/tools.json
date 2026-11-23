@@ -17,6 +17,12 @@
     "nmap",
     "openssl",
     "rg",
+    "sherlock",
+    "maigret",
+    "theHarvester",
+    "subfinder",
+    "dnsx",
+    "httpx-pd",
     "jq",
     "java",
     "python3"

@@ -48,6 +48,9 @@ COPY shared/rea/jadx-mcp.json /opt/security/rea-jadx-mcp.json
 RUN python3 /opt/security/install_artifacts.py /opt/security/rea-jadx-mcp.json "$TARGETARCH"
 # REA engine locations live in the image, so neither the shell nor MCP needs host paths.
 ENV REA_JADX_MCP_JAR=/opt/rea-engines/jadx/jadx-headless-mcp-0.7.1-all.jar
+COPY shared/install_release.py /opt/security/install_release.py
+COPY OSINTDocker/releases.json /opt/security/releases.json
+RUN python3 /opt/security/install_release.py /opt/security/releases.json "$TARGETARCH"
 COPY shared/requirements.txt /opt/security/mcp-requirements.txt
 COPY OSINTDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \

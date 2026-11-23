@@ -78,6 +78,7 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `hashcat` | `hashcat -m 0 -a 0 /workspace/hashes.txt /workspace/wordlist.txt --session lab --potfile-path /workspace/hashcat.pot` | Progress and recovered candidates for raw MD5 test hashes, if a usable backend exists. |
 | `john` | `john --wordlist=/workspace/wordlist.txt /workspace/john-hashes.txt` | Supported hashes loaded, candidate progress, and matches if found. |
 | `python3` | `python3 -c 'import sympy; print(sympy.factorint(65535))'` | Factorization {3: 1, 5: 1, 17: 1, 257: 1}. |
+| `xortool` | `xortool -l 8 /workspace/cipher.bin` | Probable key lengths; `-c 20` tries the most frequent character as key byte. |
 
 ### Certificate and digest reports
 

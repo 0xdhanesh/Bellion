@@ -1,10 +1,17 @@
 {
   "commands": [
     "nmap",
+    "masscan",
+    "arp-scan",
     "tcpdump",
     "tshark",
     "capinfos",
     "socat",
+    "proxychains4",
+    "chisel",
+    "ligolo-proxy",
+    "ligolo-agent",
+    "responder",
     "nc",
     "dig",
     "host",

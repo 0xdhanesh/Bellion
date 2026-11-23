@@ -1,5 +1,8 @@
 {
   "awscli": "1.46.3",
   "azure-cli": "2.93.0",
-  "google-cloud-cli": "594.0.0"
+  "google-cloud-cli": "594.0.0",
+  "prowler": "5.48.0",
+  "ScoutSuite": "5.14.0",
+  "kube-hunter": "0.6.8"
 }

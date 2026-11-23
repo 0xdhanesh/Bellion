@@ -24,6 +24,7 @@
     "wasm-validate",
     "java",
     "analyzeHeadless",
+    "ROPgadget",
     "python3"
   ]
 }

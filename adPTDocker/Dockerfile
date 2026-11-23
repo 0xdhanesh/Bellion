@@ -1,4 +1,13 @@
 # Build from the repository root.
+# kerbrute publishes no arm64 binary; build the pinned tag from source for every
+# architecture (Go verifies the module graph against go.sum and the checksum database).
+FROM ubuntu:24.04 AS kerbrute
+ARG KERBRUTE_VERSION=v1.0.3
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates git golang-go \
+    && rm -rf /var/lib/apt/lists/*
+RUN GOBIN=/out CGO_ENABLED=0 go install -trimpath "github.com/ropnop/kerbrute@${KERBRUTE_VERSION}" \
+    && /out/kerbrute version
+
 FROM ubuntu:24.04
 LABEL maintainer="0xdhanesh <dhanesh.professional@gmail.com>" \
       org.opencontainers.image.title="adPTDocker" \
@@ -28,6 +37,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     wget \
     && rm -rf /var/lib/apt/lists/*
+# evil-winrm is a Ruby gem; native gems (gssapi, readline-ext) compile against the
+# -dev packages below, which are removed once installed. Runtime libraries stay.
+ARG EVIL_WINRM_VERSION=4.1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential libffi-dev libkrb5-dev libreadline-dev ruby ruby-dev \
+    && gem install --no-document evil-winrm -v "$EVIL_WINRM_VERSION" \
+    && apt-get purge -y --auto-remove build-essential libffi-dev libkrb5-dev libreadline-dev ruby-dev \
+    && apt-get install -y --no-install-recommends libreadline8t64 libffi8 \
+    && rm -rf /var/lib/apt/lists/* /var/lib/gems/*/cache \
+    && evil-winrm --help >/dev/null
+COPY --from=kerbrute /out/kerbrute /usr/local/bin/kerbrute
 COPY shared/requirements.txt /opt/security/mcp-requirements.txt
 COPY adPTDocker/requirements.txt /opt/security/requirements.txt
 RUN python3 -m venv /opt/venv \

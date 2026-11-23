@@ -10,13 +10,17 @@
     "sqlmap",
     "mitmdump",
     "mitmproxy",
-    "python3",
     "subfinder",
     "dnsx",
     "httpx-pd",
     "katana",
     "nuclei",
     "naabu",
-    "interactsh-client"
+    "interactsh-client",
+    "feroxbuster",
+    "dalfox",
+    "arjun",
+    "jwt_tool",
+    "python3"
   ]
 }

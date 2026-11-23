@@ -4,9 +4,9 @@ OSINT and artifact/website reconnaissance. Maintainer: **0xdhanesh** <dhanesh.pr
 
 ## Included tools
 
-Executables: `rea`, `java`, `androguard`, `apktool`, `binwalk`, `curl`, `wget`, `dig`, `host`, `nslookup`, `whois`, `exiftool`, `file`, `strings`, `readelf`, `nmap`, `openssl`, `rg`, `jq`, `python3`.
+Executables: `rea`, `androguard`, `apktool`, `binwalk`, `curl`, `wget`, `dig`, `host`, `nslookup`, `whois`, `exiftool`, `file`, `strings`, `readelf`, `nmap`, `openssl`, `rg`, `sherlock`, `maigret`, `theHarvester`, `subfinder`, `dnsx`, `httpx-pd`, `jq`, `java`, `python3`.
 
-Python libraries/packages: `androguard>=4.1,<5`, `beautifulsoup4>=4.12,<5`, `dnspython>=2.7,<3`, `requests>=2.32,<3`.
+Python libraries/packages: `androguard>=4.1,<5`, `beautifulsoup4>=4.12,<5`, `dnspython>=2.7,<3`, `requests>=2.32,<3`, `maigret==0.6.6`, `sherlock-project==0.16.2`, `theHarvester@4.10.1`.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
 
 ## Build and spawn
@@ -96,3 +96,5 @@ for optional engines. REA does not install an analysis engine automatically.
 
 - [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
 - [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.
+
+`ciphey` is intentionally not bundled (see cryptDocker note). `sherlock`, `maigret` and `theHarvester` query third-party sites and therefore need outbound network access.
