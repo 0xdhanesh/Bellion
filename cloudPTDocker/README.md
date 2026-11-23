@@ -5,7 +5,7 @@ Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
 
 ## Included tools
 
-`aws`, `az`, `gcloud`, `openssl`, `curl`, `jq`, `python3`.
+`aws`, `az`, `gcloud`, `prowler`, `scout`, `trivy`, `kube-hunter`, `openssl`, `curl`, `jq`, `python3`.
 
 ## Build and spawn
 
@@ -50,3 +50,5 @@ environments. The Google SDK archive SHA-256
 pins are in [gcloud-release.json](gcloud-release.json). Both amd64 and arm64 have
 explicit archive mappings. Database downloads, credential setup, and cloud API
 access are separate runtime operations; nothing logs in during the build.
+
+`trivy` downloads its vulnerability database at run time, so scans need network access. `prowler`, `scout` (ScoutSuite) and `kube-hunter` each live in an isolated, version-pinned virtual environment under `/opt`.

@@ -84,6 +84,10 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `mitmdump` | `mitmdump --listen-host 0.0.0.0 --listen-port 8080 -w /workspace/flows.mitm` | Saved traffic that passes through the proxy; Ctrl-C stops capture. |
 | `mitmproxy` | `mitmproxy --listen-host 0.0.0.0 --listen-port 8080` | Interactive flow viewer; q opens the quit prompt. |
 | `python3` | `python3 -c 'import requests; r=requests.get("https://example.com", timeout=15); print(r.status_code)'` | HTTP status from a small requests script. |
+| `feroxbuster` | `feroxbuster -u http://TARGET -w /workspace/words.txt` | Recursively discovered paths with status codes. |
+| `dalfox` | `dalfox url 'http://TARGET/?q=1'` | Reflected/DOM XSS findings with PoC payloads. |
+| `arjun` | `arjun -u http://TARGET/endpoint` | Discovered hidden HTTP parameters. |
+| `jwt_tool` | `jwt_tool JWT_STRING -T` | Decoded JWT and interactive tamper menu; use `-M` modes for automated tests. |
 
 ### ProjectDiscovery discovery and checks
 

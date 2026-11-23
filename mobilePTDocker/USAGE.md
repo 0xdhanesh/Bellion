@@ -89,6 +89,7 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `strings` | `strings -a /workspace/libnative.so > /workspace/native-strings.txt` | Printable strings; occurrences are candidates, not executed behavior. |
 | `unzip` | `unzip /workspace/app.ipa -d /workspace/ipa` | Extracted IPA contents; executables may remain encrypted. |
 | `python3` | `python3 -c 'from androguard.core.apk import APK; a=APK("/workspace/app.apk"); print(a.get_package()); print(a.get_permissions())'` | Package ID and declared Android permissions. |
+| `objection` | `objection -g com.example.app explore` | Frida-powered runtime exploration REPL (needs a reachable frida-server). |
 
 ### Android connections and finite log collection
 

@@ -5,3 +5,4 @@ pefile>=2024.8.26
 pwntools==4.15.0
 pyelftools==0.33
 unicorn==2.1.2
+ROPGadget==7.7

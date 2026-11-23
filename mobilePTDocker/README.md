@@ -4,9 +4,9 @@ Android and iOS application pentesting. Maintainer: **0xdhanesh** <dhanesh.profe
 
 ## Included tools
 
-Executables: `rea`, `jadx`, `analyzeHeadless` (Ghidra), `adb`, `apktool`, `apksigner`, `zipalign`, `androguard`, `frida`, `frida-ps`, `frida-trace`, `idevice_id`, `ideviceinfo`, `idevicepair`, `idevicesyslog`, `ideviceinstaller`, `plistutil`, `readelf`, `strings`, `unzip`, `java`, `python3`.
+Executables: `rea`, `jadx`, `analyzeHeadless` (Ghidra), `adb`, `apktool`, `apksigner`, `zipalign`, `androguard`, `frida`, `frida-ps`, `frida-trace`, `idevice_id`, `ideviceinfo`, `idevicepair`, `idevicesyslog`, `ideviceinstaller`, `plistutil`, `readelf`, `strings`, `unzip`, `objection`, `java`, `python3`.
 
-Python libraries/packages: `androguard>=4.1,<5`, `frida==17.23.2`, `frida-tools>=14,<15`.
+Python libraries/packages: `androguard>=4.1,<5`, `frida==17.23.2`, `frida-tools>=14,<15`, `objection==1.12.5`.
 
 Everything a tool needs ships in the image; see [Bundled engines](#bundled-engines). Nothing is read from the host except the mounted workspace.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).

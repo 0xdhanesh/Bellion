@@ -4,11 +4,12 @@ Manifest entries:
   name     label printed in the build log
   url      download URL, or {"amd64": url, "arm64": url}
   sha256   expected digest, or {"amd64": digest, "arm64": digest}
-  install  file | xz | zip | tar
-  dest     target file (file/xz) or directory (zip/tar)
+  install  file | xz | gz | zip | tar
+  dest     target file (file/xz/gz) or directory (zip/tar)
   strip    leading path components dropped from archive members (zip/tar)
-  mode     octal permission string for file/xz targets (default "0644")
+  mode     octal permission string for file/xz/gz targets (default "0644")
 """
+import gzip
 import hashlib
 import json
 import lzma
@@ -90,10 +91,10 @@ def install(manifest_path: str, architecture: str) -> None:
                 actual = hashlib.file_digest(handle, 'sha256').hexdigest()
             if actual != expected:
                 raise ValueError(f"{entry['name']}: SHA-256 {actual} does not match pinned {expected}")
-            if kind in {'file', 'xz'}:
+            if kind in {'file', 'xz', 'gz'}:
                 dest.parent.mkdir(parents=True, exist_ok=True)
-                if kind == 'xz':
-                    with lzma.open(artifact) as source, dest.open('wb') as sink:
+                if kind in {'xz', 'gz'}:
+                    with (lzma if kind == 'xz' else gzip).open(artifact) as source, dest.open('wb') as sink:
                         shutil.copyfileobj(source, sink)
                 else:
                     shutil.copyfile(artifact, dest)

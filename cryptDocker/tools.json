@@ -4,6 +4,7 @@
     "gpg",
     "hashcat",
     "john",
+    "xortool",
     "python3"
   ]
 }

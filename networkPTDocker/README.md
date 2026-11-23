@@ -5,7 +5,7 @@ Maintainer: **0xdhanesh** <dhanesh.professional@gmail.com>.
 
 ## Included tools
 
-`nmap`, `tcpdump`, `tshark`, `capinfos`, `socat`, `nc`, `dig`, `host`, `nslookup`, `ldapsearch`, `smbclient`, `ip`, `ss`, `ping`, `traceroute`, `openssl`, `curl`, `wget`, `whois`, `jq`, `python3`.
+`nmap`, `masscan`, `arp-scan`, `tcpdump`, `tshark`, `capinfos`, `socat`, `proxychains4`, `chisel`, `ligolo-proxy`, `ligolo-agent`, `responder`, `nc`, `dig`, `host`, `nslookup`, `ldapsearch`, `smbclient`, `ip`, `ss`, `ping`, `traceroute`, `openssl`, `curl`, `wget`, `whois`, `jq`, `python3`.
 
 ## Build and spawn
 
@@ -38,6 +38,6 @@ needed files. There is no HTTP MCP endpoint or host Docker-socket mount.
 - [USAGE.md](USAGE.md): all exposed commands, expected outputs, runtime requirements, and troubleshooting.
 - [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup and operation prompts.
 
-Default networking is container-scoped. TCP-connect scans and offline captures work without raw-socket capabilities; live capture, raw scanning, host VPN routes, and ICMP access need host-specific configuration. No VPN or physical-interface capture setup is bundled.
+Default networking is container-scoped. TCP-connect scans and offline captures work without raw-socket capabilities; live capture, raw scanning, host VPN routes, and ICMP access need host-specific configuration. `masscan`, `arp-scan` and `responder` need raw sockets (and Responder binds privileged ports), so they only work when you deliberately run the container as root with `--cap-add NET_RAW --cap-add NET_ADMIN --cap-add NET_BIND_SERVICE` (and usually `--network host`); the default hardened profile runs them only for `--help`/`--version`. `chisel` and `ligolo-*` work over ordinary TCP. No VPN or physical-interface capture setup is bundled.
 
 Use `./scripts/verify.sh networkPTDocker` to build and run the offline MCP/tool checks.

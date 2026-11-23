@@ -1,0 +1,37 @@
+[
+  {
+    "name": "feroxbuster 2.13.1",
+    "url": {
+      "amd64": "https://github.com/epi052/feroxbuster/releases/download/v2.13.1/x86_64-linux-feroxbuster.zip",
+      "arm64": "https://github.com/epi052/feroxbuster/releases/download/v2.13.1/aarch64-linux-feroxbuster.zip"
+    },
+    "sha256": {
+      "amd64": "0978619a10049ccaad290b2d1241bc4d8a6aac18da07d6231186fb9d343f99de",
+      "arm64": "1e5244e1f52e55a647b65e0c76ae7afe0b9983c1fbea30ed7c67e477175eb381"
+    },
+    "install": "zip",
+    "dest": "/opt/feroxbuster"
+  },
+  {
+    "name": "Dalfox 3.2.4",
+    "url": {
+      "amd64": "https://github.com/hahwul/dalfox/releases/download/v3.2.4/dalfox-v3.2.4-linux-x86_64-musl.tar.gz",
+      "arm64": "https://github.com/hahwul/dalfox/releases/download/v3.2.4/dalfox-v3.2.4-linux-aarch64-musl.tar.gz"
+    },
+    "sha256": {
+      "amd64": "c11cfd2f8261973f0a2a2a1eba5a147ce77712a29acfa6343f9847fb8bb7eca2",
+      "arm64": "fd56b0b7da2d06868cd73b504f41d21314629feffcd5bdc97718db1c9dd2fa70"
+    },
+    "install": "tar",
+    "dest": "/opt/dalfox",
+    "strip": 1
+  },
+  {
+    "name": "jwt_tool 2.3.0",
+    "url": "https://github.com/ticarpi/jwt_tool/archive/refs/tags/v2.3.0.tar.gz",
+    "sha256": "0f8c32aa9f67cea4312e5df81d48f72dc5daf57f3cc0ce09d67db78e23fbe451",
+    "install": "tar",
+    "dest": "/opt/jwt_tool",
+    "strip": 1
+  }
+]

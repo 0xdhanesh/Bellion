@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Chisel 1.12.0",
+    "url": {
+      "amd64": "https://github.com/jpillora/chisel/releases/download/v1.12.0/chisel_1.12.0_linux_amd64.gz",
+      "arm64": "https://github.com/jpillora/chisel/releases/download/v1.12.0/chisel_1.12.0_linux_arm64.gz"
+    },
+    "sha256": {
+      "amd64": "f3f180f1d93aa72cce4e6386f98cc06569a0146fbd65eb4423cf83e6434bcfe6",
+      "arm64": "2ec6152cd2c74fe0146d4d79e4e7aa174521368c56e433d55e023a92ea404ec3"
+    },
+    "install": "gz",
+    "dest": "/usr/local/bin/chisel",
+    "mode": "0755"
+  },
+  {
+    "name": "Ligolo-ng 0.9.2 proxy",
+    "url": {
+      "amd64": "https://github.com/nicocha30/ligolo-ng/releases/download/v0.9.2/ligolo-ng_proxy_0.9.2_linux_amd64.tar.gz",
+      "arm64": "https://github.com/nicocha30/ligolo-ng/releases/download/v0.9.2/ligolo-ng_proxy_0.9.2_linux_arm64.tar.gz"
+    },
+    "sha256": {
+      "amd64": "6c683c403502d366276595197749e620c975908dae7314c21079ec8ebee4e5d0",
+      "arm64": "6430178776bb9efc451a62f6c468fa482c2aded84d10f64f637bfabd0fd8e7ac"
+    },
+    "install": "tar",
+    "dest": "/opt/ligolo-ng"
+  },
+  {
+    "name": "Ligolo-ng 0.9.2 agent",
+    "url": {
+      "amd64": "https://github.com/nicocha30/ligolo-ng/releases/download/v0.9.2/ligolo-ng_agent_0.9.2_linux_amd64.tar.gz",
+      "arm64": "https://github.com/nicocha30/ligolo-ng/releases/download/v0.9.2/ligolo-ng_agent_0.9.2_linux_arm64.tar.gz"
+    },
+    "sha256": {
+      "amd64": "714534917a4a58812669619667cc57dfad03d34d0de5b0d7c468d76819f84111",
+      "arm64": "94c5d3b1eca9f352a770599c0e4487299d832e6de2dad891dbd2041d56a0fd7d"
+    },
+    "install": "tar",
+    "dest": "/opt/ligolo-ng"
+  },
+  {
+    "name": "Responder 3.2.2.0",
+    "url": "https://github.com/lgandx/Responder/archive/refs/tags/v3.2.2.0.tar.gz",
+    "sha256": "2b64693e4aad99ffe0d9a7ed76e5a118bbb78300e84d7065991fa75baf11550e",
+    "install": "tar",
+    "dest": "/opt/responder",
+    "strip": 1
+  }
+]

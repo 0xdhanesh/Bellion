@@ -4,9 +4,9 @@ Web application pentesting. Maintainer: **0xdhanesh** <dhanesh.professional@gmai
 
 ## Included tools
 
-Executables: `curl`, `wget`, `dig`, `ffuf`, `gobuster`, `nmap`, `openssl`, `sqlmap`, `mitmdump`, `mitmproxy`, `python3`, `subfinder`, `dnsx`, `httpx-pd`, `katana`, `nuclei`, `naabu`, `interactsh-client`.
+Executables: `curl`, `wget`, `dig`, `ffuf`, `gobuster`, `nmap`, `openssl`, `sqlmap`, `mitmdump`, `mitmproxy`, `subfinder`, `dnsx`, `httpx-pd`, `katana`, `nuclei`, `naabu`, `interactsh-client`, `feroxbuster`, `dalfox`, `arjun`, `jwt_tool`, `python3`.
 
-Python libraries/packages: `beautifulsoup4>=4.12,<5`, `mitmproxy>=11,<13`, `requests>=2.32,<3`.
+Python libraries/packages: `beautifulsoup4>=4.12,<5`, `mitmproxy>=11,<13`, `requests>=2.32,<3`, `arjun==2.2.7`, `termcolor>=2,<4`, `cprint>=1,<2`, `pycryptodomex>=3.20,<4`, `ratelimit>=2.2,<3`.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
 
 ## Build and spawn

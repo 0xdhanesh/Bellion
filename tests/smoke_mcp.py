@@ -86,6 +86,12 @@ def check_network_tools():
         subprocess.run(['tcpdump', '-nn', '-r', str(capture), '-c', '1'], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run(['nmap', '--version'], check=True, stdout=subprocess.DEVNULL)
+    for command in (['masscan', '--version'], ['arp-scan', '--version'], ['proxychains4', '-q', '/bin/true'],
+                    ['chisel', '--version'], ['ligolo-proxy', '-h'], ['ligolo-agent', '-h'],
+                    ['responder', '--help']):
+        # Some print usage and exit non-zero for -h; require a clean exit or visible output.
+        result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+        assert result.returncode == 0 or result.stdout + result.stderr, (command, result)
     print('PASS: offline packet parsing with TShark, capinfos, tcpdump; Nmap starts')
 
 
@@ -98,9 +104,12 @@ def check_ad_tools():
     parsed = SMB2Packet(encoded)
     assert encoded.startswith(b'\xfeSMB') and parsed['TreeID'] == 42, encoded
     for tool in ['GetADUsers.py', 'GetUserSPNs.py', 'findDelegation.py',
-                 'smbclient.py', 'rpcdump.py', 'lookupsid.py', 'mssqlclient.py']:
+                 'smbclient.py', 'rpcdump.py', 'lookupsid.py', 'mssqlclient.py',
+                 'secretsdump.py', 'ntlmrelayx.py', 'GetNPUsers.py', 'ticketer.py',
+                 'certipy', 'bloodhound-python', 'evil-winrm']:
         subprocess.run([tool, '-h'], check=True, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL, timeout=30)
+    subprocess.run(['kerbrute', 'version'], check=True, stdout=subprocess.DEVNULL, timeout=30)
     print('PASS: Impacket SMB2 serialization and AD client startup; no domain contacted')
 
 
@@ -113,6 +122,10 @@ def check_cloud_tools():
     versions = json.loads(subprocess.check_output(['az', 'version', '--output', 'json'], text=True))
     assert versions['azure-cli'] == '2.93.0', versions
     assert '594.0.0' in subprocess.check_output(['gcloud', '--version'], text=True)
+    assert '0.76.1' in subprocess.check_output(['trivy', '--version'], text=True)
+    assert '5.48.0' in subprocess.check_output(['prowler', '--version'], text=True)
+    for command in (['scout', '--help'], ['kube-hunter', '--help']):
+        subprocess.run(command, check=True, stdout=subprocess.DEVNULL, timeout=120)
     # Explicit fake credentials and stubbed response: no provider or metadata call.
     client = boto3.client('sts', region_name='us-east-1',
                           aws_access_key_id='fixture', aws_secret_access_key='fixture')
@@ -151,6 +164,17 @@ async def main():
         'cryptDocker': ['cryptography', 'gmpy2', 'Crypto', 'sympy', 'z3'],
         'OSINTDocker': ['androguard', 'bs4', 'dns', 'requests'],
     }
+    extra = {
+        'webPTDocker': [['feroxbuster', '--version'], ['dalfox', '--version'], ['arjun', '-h'],
+                        ['jwt_tool', '-h']],
+        'cryptDocker': [['xortool', '--help']],
+        'OSINTDocker': [['sherlock', '--version'], ['maigret', '--version'], ['theHarvester', '-h'],
+                        ['subfinder', '-version'], ['dnsx', '-version'], ['httpx-pd', '-version']],
+        'mobilePTDocker': [['objection', '--help']],
+        'reDocker': [['ROPgadget', '--help'], ['checksec', '--help']],
+    }
+    for command in extra.get(os.environ['SECURITY_ENV'], []):
+        subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
     for module in modules[os.environ['SECURITY_ENV']]:
         importlib.import_module(module)
     if os.environ['SECURITY_ENV'] == 'webPTDocker':

@@ -33,7 +33,17 @@ ARG TARGETARCH
 COPY cloudPTDocker/versions.json cloudPTDocker/gcloud-release.json /opt/security/
 COPY cloudPTDocker/install_clis.py cloudPTDocker/install_gcloud.py /opt/security/
 RUN /usr/bin/python3 /opt/security/install_gcloud.py "$TARGETARCH"
-RUN /usr/bin/python3 /opt/security/install_clis.py
+# Some prowler dependencies (e.g. zstd) have no wheels on every architecture, so a
+# compiler is present only while the CLIs are installed.
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential python3-dev \
+    && /usr/bin/python3 /opt/security/install_clis.py \
+    && apt-get purge -y --auto-remove build-essential python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+COPY shared/install_artifacts.py /opt/security/install_artifacts.py
+COPY cloudPTDocker/artifacts.json /opt/security/artifacts.json
+RUN /usr/bin/python3 /opt/security/install_artifacts.py /opt/security/artifacts.json "$TARGETARCH" \
+    && ln -s /opt/trivy/trivy /usr/local/bin/trivy \
+    && trivy --version
 ENV CLOUDSDK_PYTHON=/usr/bin/python3 \
     CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true \
     CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK=true \

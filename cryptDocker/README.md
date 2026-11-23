@@ -4,9 +4,9 @@ Cryptographic implementation analysis. Maintainer: **0xdhanesh** <dhanesh.profes
 
 ## Included tools
 
-Executables: `openssl`, `gpg`, `hashcat`, `john`, `python3`.
+Executables: `openssl`, `gpg`, `hashcat`, `john`, `xortool`, `python3`.
 
-Python libraries/packages: `cryptography>=44,<49`, `gmpy2>=2.2,<3`, `pycryptodome>=3.21,<4`, `sympy>=1.13,<2`, `z3-solver>=4.13,<5`.
+Python libraries/packages: `cryptography>=44,<49`, `gmpy2>=2.2,<3`, `pycryptodome>=3.21,<4`, `sympy>=1.13,<2`, `z3-solver>=4.13,<5`, `xortool==1.1.0`.
 The MCP bridge uses the [official Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x).
 
 ## Build and spawn
@@ -81,3 +81,5 @@ images. Keep build logs or freeze package versions when reproducibility is neede
 
 - [USAGE.md](USAGE.md): build, shell startup, command examples, outputs, and troubleshooting.
 - [MCPUSAGE.md](MCPUSAGE.md): Claude, Codex, Grok CLI, and Antigravity setup with operation prompts.
+
+`ciphey` (optional) is not bundled: it needs a compiled `cipheycore` extension that has no wheels for the image's Python 3.12 and pins long-unmaintained dependencies.

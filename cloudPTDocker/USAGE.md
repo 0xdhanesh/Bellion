@@ -77,6 +77,10 @@ Use its help for all options. Report files under `/workspace` persist on the hos
 | `curl` | `curl -I --max-time 15 https://LAB_HOST` | Response headers from an authorized lab endpoint. |
 | `jq` | `jq '.Account' /workspace/identity.json` | A field selected from a saved CLI JSON report. |
 | `python3` | `python3 -c 'import boto3; print(boto3.__version__)'` | Installed AWS SDK version; no cloud API call. |
+| `prowler` | `prowler aws --list-checks` | Check catalogue; scans use credentials you supply. |
+| `scout` | `scout aws --help` | ScoutSuite provider options and HTML report generation. |
+| `trivy` | `trivy image --scanners vuln IMAGE` | Vulnerability report; first run downloads the vulnerability DB. |
+| `kube-hunter` | `kube-hunter --remote CLUSTER_IP` | Reachable Kubernetes exposure findings. |
 
 ### Authenticate only to the intended cloud account
 

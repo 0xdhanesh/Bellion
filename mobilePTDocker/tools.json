@@ -21,6 +21,7 @@
     "zipalign",
     "java",
     "analyzeHeadless",
+    "objection",
     "python3"
   ]
 }
