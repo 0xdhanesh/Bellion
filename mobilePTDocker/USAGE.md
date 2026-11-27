@@ -90,6 +90,21 @@ prints usage when invoked without arguments). Inputs such as `sample`,
 | `unzip` | `unzip /workspace/app.ipa -d /workspace/ipa` | Extracted IPA contents; executables may remain encrypted. |
 | `python3` | `python3 -c 'from androguard.core.apk import APK; a=APK("/workspace/app.apk"); print(a.get_package()); print(a.get_permissions())'` | Package ID and declared Android permissions. |
 | `objection` | `objection -g com.example.app explore` | Frida-powered runtime exploration REPL (needs a reachable frida-server). |
+| `ipa-rasp` | `ipa-rasp /workspace/app.ipa` | Static RASP / anti-debug / jailbreak / instrumentation detection report for an IPA. |
+
+### iOS IPA static RASP analysis
+
+Whenever you analyze an IPA, run the bundled static RASP scanner. It extracts the IPA, locates the main binary, and reports common anti-debug, jailbreak detection, and instrumentation (Frida) indicators using only tools already in the image (`unzip`, `strings`, `nm`, `plistutil`).
+
+```bash
+# Place the IPA in the workspace, then inside the container:
+ipa-rasp /workspace/MyApp.ipa
+
+# JSON output for further processing or MCP clients:
+ipa-rasp /workspace/MyApp.ipa --json
+```
+
+The report is printed directly to the terminal. High-severity findings indicate strong static evidence of RASP controls. This is complementary to dynamic Frida checks (which require a reachable device and frida-server).
 
 ### Android connections and finite log collection
 
