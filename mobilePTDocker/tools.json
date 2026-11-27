@@ -22,6 +22,7 @@
     "java",
     "analyzeHeadless",
     "objection",
-    "python3"
+    "python3",
+    "ipa-rasp"
   ]
 }
