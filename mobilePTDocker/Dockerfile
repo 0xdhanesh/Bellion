@@ -87,6 +87,9 @@ RUN useradd --badname --uid 10001 --create-home --shell /bin/bash 0xdhanesh \
     && chown 10001:10001 /workspace
 COPY shared/mcp_server.py /opt/security/mcp_server.py
 COPY mobilePTDocker/tools.json /opt/security/tools.json
+# Static iOS RASP scanner — available as ipa-rasp inside the container
+COPY mobilePTDocker/scripts/ipa_rasp_scanner.sh /usr/local/bin/ipa-rasp
+RUN chmod +x /usr/local/bin/ipa-rasp
 USER 0xdhanesh
 WORKDIR /workspace
 ENTRYPOINT ["/usr/bin/tini", "--"]
